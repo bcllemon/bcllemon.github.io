@@ -61,6 +61,72 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-2015/react-native-for-android--" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/10/21/2015/react-native-for-android--/" class="article-date">
+  <time datetime="2015-10-21T09:31:00.000Z" itemprop="datePublished">2015-10-21</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/10/21/2015/react-native-for-android--/">React Native for Android 环境搭建-坑</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="准备工作">准备工作</h1><ul>
+<li>操作系统：OSX</li>
+</ul>
+<h1 id="基本环境">基本环境</h1><h2 id="Homebrew">Homebrew</h2><h3 id="新安装">新安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ruby <span class="operator">-e</span> <span class="string">"<span class="variable">$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)</span>"</span></span><br></pre></td></tr></table></figure>
+<h3 id="已安装-务必更新">已安装-<font color="red">务必更新</font></h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/loacl</span><br><span class="line">git fetch origin</span><br><span class="line">git <span class="operator"><span class="keyword">reset</span> <span class="comment">--hard origin/master</span></span><br><span class="line">brew <span class="keyword">update</span></span></span><br></pre></td></tr></table></figure>
+<h2 id="Nodejs">Nodejs</h2><h3 id="安装_nvm">安装 nvm</h3><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">brew <span class="keyword">install</span> curl  <span class="comment"># 确保安装了 curl</span></span><br><span class="line">curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.<span class="number">29.0</span>/<span class="keyword">install</span>.sh | bash</span><br></pre></td></tr></table></figure>
+<h3 id="安装_Nodejs">安装 Nodejs</h3><p>此处需要安装4.0以上版本<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvm <span class="operator"><span class="keyword">install</span> node &amp;&amp; nvm <span class="keyword">alias</span> <span class="keyword">default</span> node</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="NPM_国内源">NPM 国内源</h3><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm config <span class="keyword">set</span> registry https:<span class="comment">//registry.npm.taobao.org</span></span><br><span class="line">npm config <span class="keyword">set</span> disturl https:<span class="comment">//npm.taobao.org/dist</span></span><br></pre></td></tr></table></figure>
+<h2 id="watchman">watchman</h2><p><a href="https://facebook.github.io/watchman/docs/install.html" target="_blank" rel="external">watchman</a> 是 Facebook 的一个用于监控文件变更并触发指定操作的工具：<br><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">brew </span>install watchman</span><br></pre></td></tr></table></figure></p>
+<h2 id="flow">flow</h2><p><a href="http://flowtype.org/" target="_blank" rel="external">Flow</a> 是一个 JavaScript 的静态类型检查器，建议安装它，以方便找出代码中可能存在的类型错误：</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">brew </span>install flow</span><br></pre></td></tr></table></figure>
+<h2 id="Android_SDK">Android SDK</h2><h3 id="SDK:">SDK:</h3><ul>
+<li>Android SDK Build-tools</li>
+<li>Android Support Repository<h3 id="模拟器">模拟器</h3></li>
+<li>API 19以上</li>
+</ul>
+<p>详细介绍可以参考 <a href="http://wiki.jikexueyuan.com/project/react-native/DevelopmentSetupAndroid.html" target="_blank" rel="external">这篇文章</a> 。</p>
+<h2 id="React_Native">React Native</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="operator"><span class="keyword">install</span> -<span class="keyword">g</span> react-<span class="keyword">native</span>-cli</span></span><br></pre></td></tr></table></figure>
+<h1 id="使用步骤">使用步骤</h1><h2 id="新建工程">新建工程</h2><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">react-<span class="keyword">native</span> init demoProject</span><br></pre></td></tr></table></figure>
+<h2 id="运行工程">运行工程</h2><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">react-<span class="keyword">native</span> run-android</span><br></pre></td></tr></table></figure>
+<h2 id="常见问题">常见问题</h2><h3 id="端口占用">端口占用</h3><p>如果 Running Packager 提示 “Packager can’t listen on port 8081” ，说明 8081 端口被占用，可以检查是什么程序占用了这个端口并杀掉它：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo lsof -n -i4TCP:<span class="number">8081</span> | grep LISTEN</span><br><span class="line">$ kill -<span class="number">9</span> &lt;进程id&gt;</span><br></pre></td></tr></table></figure></p>
+<h3 id="加载失败">加载失败</h3><p><img src="http://7xnhcl.com1.z0.glb.clouddn.com/post-react-android-1.png" alt="加载失败"><br>你还需要进行如下设置：</p>
+<ul>
+<li>更新 brew 和 watchman ：brew update &amp;&amp; brew upgrade watchman；参考 brew 安装中的说明</li>
+<li>按下菜单按钮呼出菜单<br><img src="http://7xnhcl.com1.z0.glb.clouddn.com/post-react-android-2.png" alt="菜单"><br>然后点击【Dev Settings】菜单项进入应用的选项界面，再点击【Debug server host for device】选项，填入你的Mac主机的 ip，然后重启 APP ；<br><img src="http://7xnhcl.com1.z0.glb.clouddn.com/post-react-android-3.png" alt="Debug server host for device"><br>其他选项，按需勾选。<br>Auto reload on JS Change - 自动刷新界面</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://bcllemon.github.com/2015/10/21/2015/react-native-for-android--/" data-id="cig0mqdw70005d8pyax6tv24o" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-2015/mongodbpython" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2015/10/18/2015/mongodbpython/" class="article-date">
@@ -104,7 +170,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.com/2015/10/18/2015/mongodbpython/" data-id="cifvw61xr00000kpyog9kcxa7" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.com/2015/10/18/2015/mongodbpython/" data-id="cig0mqdw90007d8pyzqb9d2zq" class="article-share-link">Share</a>
       
       
     </footer>
@@ -147,7 +213,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.com/2015/10/16/2015/iosdevicetoken/" data-id="cifth0l160000bopy3rsejhy1" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.com/2015/10/16/2015/iosdevicetoken/" data-id="cig0mqdvm0000d8py2bcwqtyg" class="article-share-link">Share</a>
       
       
     </footer>
@@ -211,7 +277,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.com/2015/10/13/https/" data-id="cifp5qp4m00002lpy51iqe4k5" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.com/2015/10/13/https/" data-id="cig0mqdw30003d8pyqclu3nry" class="article-share-link">Share</a>
       
       
     </footer>
@@ -230,7 +296,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">3</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -243,7 +309,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">3</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -253,6 +319,10 @@
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2015/10/21/2015/react-native-for-android--/">React Native for Android 环境搭建-坑</a>
+          </li>
         
           <li>
             <a href="/2015/10/18/2015/mongodbpython/">Mongodb和Python进行数据统计</a>

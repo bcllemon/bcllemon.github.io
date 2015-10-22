@@ -22,7 +22,7 @@
 <meta property="og:image" content="http://7xnhcl.com1.z0.glb.clouddn.com/post-react-android-1.png">
 <meta property="og:image" content="http://7xnhcl.com1.z0.glb.clouddn.com/post-react-android-2.png">
 <meta property="og:image" content="http://7xnhcl.com1.z0.glb.clouddn.com/post-react-android-3.png">
-<meta property="og:updated_time" content="2015-10-21T10:20:03.000Z">
+<meta property="og:updated_time" content="2015-10-22T07:51:04.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="React Native for Android 环境搭建-坑">
 <meta name="twitter:description" content="准备工作
@@ -122,19 +122,45 @@ var _hmt = _hmt || [];
 <h2 id="flow">flow</h2><p><a href="http://flowtype.org/" target="_blank" rel="external">Flow</a> 是一个 JavaScript 的静态类型检查器，建议安装它，以方便找出代码中可能存在的类型错误：</p>
 <figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">brew </span>install flow</span><br></pre></td></tr></table></figure>
 <h2 id="Android_SDK">Android SDK</h2><h3 id="SDK:">SDK:</h3><ul>
+<li>Android SDK Tools</li>
+<li>Android SDK Platform-tools</li>
 <li>Android SDK Build-tools</li>
+<li>Android SDK Platform</li>
 <li>Android Support Repository<h3 id="模拟器">模拟器</h3></li>
-<li>API 19以上</li>
+<li>API 19以上<h3 id="环境变量">环境变量</h3></li>
+<li>ANDROID_SDK</li>
+<li>ANDROID_NDK</li>
 </ul>
 <p>详细介绍可以参考 <a href="http://wiki.jikexueyuan.com/project/react-native/DevelopmentSetupAndroid.html" target="_blank" rel="external">这篇文章</a> 。</p>
 <h2 id="React_Native">React Native</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="operator"><span class="keyword">install</span> -<span class="keyword">g</span> react-<span class="keyword">native</span>-cli</span></span><br></pre></td></tr></table></figure>
 <h1 id="使用步骤">使用步骤</h1><h2 id="新建工程">新建工程</h2><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">react-<span class="keyword">native</span> init demoProject</span><br></pre></td></tr></table></figure>
 <h2 id="运行工程">运行工程</h2><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">react-<span class="keyword">native</span> run-android</span><br></pre></td></tr></table></figure>
-<h2 id="常见问题">常见问题</h2><h3 id="端口占用">端口占用</h3><p>如果 Running Packager 提示 “Packager can’t listen on port 8081” ，说明 8081 端口被占用，可以检查是什么程序占用了这个端口并杀掉它：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo lsof -n -i4TCP:<span class="number">8081</span> | grep LISTEN</span><br><span class="line">$ kill -<span class="number">9</span> &lt;进程id&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="常见问题">常见问题</h2><h3 id="启动速度慢">启动速度慢</h3><p>Android App使用 gradle 打包，在第一次启动时，会下载 gradle 和相应的依赖包，所以会造成启动速度缓慢。可以自行修改 app 中 /android/gradle.properties的配置，使用本地已经配置好的环境优化启动速度。</p>
+<h3 id="端口占用">端口占用</h3><p>如果 Running Packager 提示 “Packager can’t listen on port 8081” ，说明 8081 端口被占用，可以检查是什么程序占用了这个端口并杀掉它：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo lsof -n -i4TCP:<span class="number">8081</span> | grep LISTEN</span><br><span class="line">$ kill -<span class="number">9</span> &lt;进程id&gt;</span><br></pre></td></tr></table></figure></p>
 <h3 id="加载失败">加载失败</h3><p><img src="http://7xnhcl.com1.z0.glb.clouddn.com/post-react-android-1.png" alt="加载失败"><br>你还需要进行如下设置：</p>
 <ul>
 <li>更新 brew 和 watchman ：brew update &amp;&amp; brew upgrade watchman；参考 brew 安装中的说明</li>
 <li>按下菜单按钮呼出菜单<br><img src="http://7xnhcl.com1.z0.glb.clouddn.com/post-react-android-2.png" alt="菜单"><br>然后点击【Dev Settings】菜单项进入应用的选项界面，再点击【Debug server host for device】选项，填入你的Mac主机的 ip，然后重启 APP ；<br><img src="http://7xnhcl.com1.z0.glb.clouddn.com/post-react-android-3.png" alt="Debug server host for device"><br>其他选项，按需勾选。<br>Auto reload on JS Change - 自动刷新界面</li>
+</ul>
+<h1 id="Example_App">Example App</h1><h2 id="下载">下载</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone https:<span class="comment">//github.com/facebook/react-native.git</span></span><br><span class="line">git checkout <span class="number">0.13</span>-stable</span><br></pre></td></tr></table></figure>
+<p><font color="red">注意选择稳定分支，不要使用 master 分支</font></p>
+<h2 id="运行">运行</h2><p>Exmaple App 中，Movies 和 UIExplorer 两个是 IOS 和 Android 都可以的，剩下俩个都是只有 IOS 版本的。这两个 APP 和上面说的通过 <code>react-native init</code>方式创建的不同，需要使用不同的方式来启动。<br><a href="https://github.com/facebook/react-native/tree/master/ReactAndroid#prerequisites" target="_blank" rel="external">详情</a></p>
+<h3 id="安装依赖">安装依赖</h3><ul>
+<li><p>react-native依赖</p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd react-<span class="keyword">native</span></span><br><span class="line"><span class="built_in">npm</span> install</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Android<br>需要 SDK、Build-tools、NDK、Emulator</p>
+</li>
+</ul>
+<h3 id="编译基础">编译基础</h3><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd react-native</span><br><span class="line">./gradlew <span class="symbol">:ReactAndroid</span><span class="symbol">:assembleDebug</span></span><br></pre></td></tr></table></figure>
+<h3 id="编译运行">编译运行</h3><p>编译过程中需要下载依赖包，所以要耐心等待。</p>
+<ul>
+<li><p>UIExplorer</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd react-native</span><br><span class="line">./<span class="string">gradlew :</span><span class="string">Examples:</span><span class="string">UIExplorer:</span><span class="string">android:</span><span class="string">app:</span>installDebug</span><br><span class="line">.<span class="regexp">/package./</span>packager/packager.sh</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Movies</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd react-native</span><br><span class="line">./<span class="string">gradlew :</span><span class="string">Examples:</span><span class="string">Movies:</span><span class="string">android:</span><span class="string">app:</span>installDebug</span><br><span class="line">.<span class="regexp">/package./</span>packager/packager.sh</span><br></pre></td></tr></table></figure>
+</li>
 </ul>
 
       

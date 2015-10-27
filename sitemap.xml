@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://bcllemon.github.com/2015/10/27/2015/nginx-lua-redis/</loc>
+    <lastmod>2015-10-27T10:45:07.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://bcllemon.github.com/2015/10/21/2015/react-native-for-android--/</loc>
     <lastmod>2015-10-22T07:51:04.000Z</lastmod>
   </url>

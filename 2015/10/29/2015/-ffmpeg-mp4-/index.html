@@ -3,17 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Category: 技术 | 溺水的游鱼</title>
+  <title>用 FFMPEG 合并 MP4 视频 | 溺水的游鱼</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description">
-<meta property="og:type" content="website">
-<meta property="og:title" content="溺水的游鱼">
-<meta property="og:url" content="http://bcllemon.github.com/categories/技术/index.html">
+  <meta name="description" content="ffmpeg + ts重磅推出终极解决方案。这个的思路是先将 mp4 转化为同样编码形式的 ts 流，因为 ts流是可以 concate 的，先把 mp4 封装成 ts ，然后 concate ts 流， 最后再把 ts 流转化为 mp4。123ffmpeg -i 1.mp4 -vcodec copy -acodec copy -vbsf h264_mp4toannexb 1.tsffmpeg -">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用 FFMPEG 合并 MP4 视频">
+<meta property="og:url" content="http://bcllemon.github.com/2015/10/29/2015/-ffmpeg-mp4-/index.html">
 <meta property="og:site_name" content="溺水的游鱼">
-<meta property="og:description">
+<meta property="og:description" content="ffmpeg + ts重磅推出终极解决方案。这个的思路是先将 mp4 转化为同样编码形式的 ts 流，因为 ts流是可以 concate 的，先把 mp4 封装成 ts ，然后 concate ts 流， 最后再把 ts 流转化为 mp4。123ffmpeg -i 1.mp4 -vcodec copy -acodec copy -vbsf h264_mp4toannexb 1.tsffmpeg -">
+<meta property="og:updated_time" content="2015-10-29T06:29:49.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="溺水的游鱼">
-<meta name="twitter:description">
+<meta name="twitter:title" content="用 FFMPEG 合并 MP4 视频">
+<meta name="twitter:description" content="ffmpeg + ts重磅推出终极解决方案。这个的思路是先将 mp4 转化为同样编码形式的 ts 流，因为 ts流是可以 concate 的，先把 mp4 封装成 ts ，然后 concate ts 流， 最后再把 ts 流转化为 mp4。123ffmpeg -i 1.mp4 -vcodec copy -acodec copy -vbsf h264_mp4toannexb 1.tsffmpeg -">
   
     <link rel="alternative" href="/atom.xml" title="溺水的游鱼" type="application/atom+xml">
   
@@ -68,134 +69,66 @@ var _hmt = _hmt || [];
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2015" class="archive-year">2015</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2015/10/29/2015/python-java-aes/" class="archive-article-date">
-  <time datetime="2015-10-29T09:16:00.000Z" itemprop="datePublished">Oct 29</time>
+        <section id="main"><article id="post-2015/-ffmpeg-mp4-" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/10/29/2015/-ffmpeg-mp4-/" class="article-date">
+  <time datetime="2015-10-29T06:28:00.000Z" itemprop="datePublished">2015-10-29</time>
 </a>
-      
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/其他/">其他</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/10/29/2015/python-java-aes/">Python Java AES</a>
+    <h1 class="article-title" itemprop="name">
+      用 FFMPEG 合并 MP4 视频
     </h1>
   
 
-    </header>
-  </div>
-</article>
-  
+      </header>
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2015/10/27/2015/nginx-lua-redis/" class="archive-article-date">
-  <time datetime="2015-10-27T09:49:00.000Z" itemprop="datePublished">Oct 27</time>
-</a>
+    <div class="article-entry" itemprop="articleBody">
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/10/27/2015/nginx-lua-redis/">nginx-lua-redis</a>
-    </h1>
-  
+        <h1 id="ffmpeg_+_ts">ffmpeg + ts</h1><p>重磅推出终极解决方案。这个的思路是先将 mp4 转化为同样编码形式的 ts 流，因为 ts流是可以 concate 的，先把 mp4 封装成 ts ，然后 concate ts 流， 最后再把 ts 流转化为 mp4。<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -<span class="tag">i</span> <span class="number">1</span><span class="class">.mp4</span> -vcodec copy -acodec copy -vbsf h264_mp4toannexb <span class="number">1</span><span class="class">.ts</span></span><br><span class="line">ffmpeg -<span class="tag">i</span> <span class="number">2</span><span class="class">.mp4</span> -vcodec copy -acodec copy -vbsf h264_mp4toannexb <span class="number">2</span><span class="class">.ts</span></span><br><span class="line">ffmpeg -<span class="tag">i</span> <span class="string">"concat:1.ts|2.ts"</span> -acodec copy -vcodec copy -absf aac_adtstoasc output.mp4</span><br></pre></td></tr></table></figure></p>
 
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2015/10/21/2015/react-native-for-android--/" class="archive-article-date">
-  <time datetime="2015-10-21T09:31:00.000Z" itemprop="datePublished">Oct 21</time>
-</a>
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/10/21/2015/react-native-for-android--/">React Native for Android 环境搭建-坑</a>
-    </h1>
-  
-
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2015/10/18/2015/mongodbpython/" class="archive-article-date">
-  <time datetime="2015-10-18T01:46:00.000Z" itemprop="datePublished">Oct 18</time>
-</a>
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://bcllemon.github.com/2015/10/29/2015/-ffmpeg-mp4-/" data-id="cigbuq07f000030pyktz3m2ro" class="article-share-link">Share</a>
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/10/18/2015/mongodbpython/">Mongodb和Python进行数据统计</a>
-    </h1>
-  
-
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2015/10/16/2015/iosdevicetoken/" class="archive-article-date">
-  <time datetime="2015-10-16T09:44:00.000Z" itemprop="datePublished">Oct 16</time>
-</a>
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/10/16/2015/iosdevicetoken/">iOS的DeviceToken随生产环境和开发环境变化</a>
-    </h1>
-  
-
-    </header>
+    </footer>
   </div>
-</article>
   
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2015/10/13/https/" class="archive-article-date">
-  <time datetime="2015-10-13T08:13:45.000Z" itemprop="datePublished">Oct 13</time>
-</a>
-      
+<nav id="article-nav">
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/10/13/https/">Nginx+Tomcat 配置 https</a>
-    </h1>
+    <a href="/2015/10/29/2015/python-java-aes/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Python Java AES
+        
+      </div>
+    </a>
   
+  
+    <a href="/2015/10/27/2015/nginx-lua-redis/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">nginx-lua-redis</div>
+    </a>
+  
+</nav>
 
-    </header>
-  </div>
+  
 </article>
-  
-  
-    </div></section>
-  
+
 </section>
         
           <aside id="sidebar">

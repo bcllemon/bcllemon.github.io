@@ -70,6 +70,148 @@ var _hmt = _hmt || [];
       <div class="outer">
         <section id="main">
   
+    <article id="post-2015/spring-dynamic-datasource" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/12/04/2015/spring-dynamic-datasource/" class="article-date">
+  <time datetime="2015-12-04T06:29:00.000Z" itemprop="datePublished">2015-12-04</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/04/2015/spring-dynamic-datasource/">spring动态数据源</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="核心思想">核心思想</h1><p>通过使用Spring提供的AbstractRoutingDataSource替代原有 dataSource，在每次操作数据库的时候通过类中的determineTargetDataSource()方法获取当前数据源。这样我们就可以通过切面技术，在不同的切面，切入不同的数据源名称，使Spring获取的时候拿到的是不同的数据源。就相当于在多个 dataSource前面增加了一个路由层。</p>
+<h1 id="基础用法">基础用法</h1><h2 id="原理">原理</h2><p>通过查看AbstractRoutingDataSource的determineTargetDataSource实现，可以发现基本原理就是通过determineCurrentLookupKey()获取当前数据源的 key，然后从resolvedDataSources获取对应数据源并返回。无法获取则返回默认配置数据源。而resolvedDataSources是通过targetDataSources初始化的。也就是说，我们在使用中配置两个地方。</p>
+<ol>
+<li>defaultTargetDataSource</li>
+<li>targetDataSources<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> afterPropertiesSet() &#123;</span><br><span class="line">	<span class="keyword">if</span> (<span class="keyword">this</span>.targetDataSources == <span class="keyword">null</span>) &#123;</span><br><span class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Property 'targetDataSources' is required"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">this</span>.resolvedDataSources = <span class="keyword">new</span> <span class="keyword">HashMap</span>&lt;<span class="keyword">Object</span>, DataSource&gt;(<span class="keyword">this</span>.targetDataSources.<span class="built_in">size</span>());</span><br><span class="line">	<span class="keyword">for</span> (Map.Entry&lt;<span class="keyword">Object</span>, <span class="keyword">Object</span>&gt; entry : <span class="keyword">this</span>.targetDataSources.entrySet()) &#123;</span><br><span class="line">		<span class="keyword">Object</span> lookupKey = resolveSpecifiedLookupKey(entry.getKey());</span><br><span class="line">		DataSource dataSource = resolveSpecifiedDataSource(entry.getValue());</span><br><span class="line">		<span class="keyword">this</span>.resolvedDataSources.put(lookupKey, dataSource);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (<span class="keyword">this</span>.defaultTargetDataSource != <span class="keyword">null</span>) &#123;</span><br><span class="line">		<span class="keyword">this</span>.resolvedDefaultDataSource = resolveSpecifiedDataSource(<span class="keyword">this</span>.defaultTargetDataSource);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">   <span class="function"><span class="keyword">protected</span> DataSource <span class="title">determineTargetDataSource</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	Assert.notNull(<span class="keyword">this</span>.resolvedDataSources, <span class="string">"DataSource router not initialized"</span>);</span><br><span class="line">	Object lookupKey = determineCurrentLookupKey();</span><br><span class="line">	DataSource dataSource = <span class="keyword">this</span>.resolvedDataSources.<span class="keyword">get</span>(lookupKey);</span><br><span class="line">	<span class="keyword">if</span> (dataSource == <span class="keyword">null</span> &amp;&amp; (<span class="keyword">this</span>.lenientFallback || lookupKey == <span class="keyword">null</span>)) &#123;</span><br><span class="line">		dataSource = <span class="keyword">this</span>.resolvedDefaultDataSource;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (dataSource == <span class="keyword">null</span>) &#123;</span><br><span class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Cannot determine target DataSource for lookup key ["</span> + lookupKey + <span class="string">"]"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> dataSource;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="步骤1">步骤1</h2><p>通过 ThreadLocal 记录获取当前使用的数据源 Key<br><figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> class DataSourceHolder &#123;</span><br><span class="line">    <span class="comment">//线程本地环境</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> ThreadLocal&lt;<span class="keyword">String</span>&gt; dataSources = <span class="keyword">new</span> ThreadLocal&lt;<span class="keyword">String</span>&gt;();</span><br><span class="line">    <span class="comment">//设置数据源</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> setDataSource(<span class="keyword">String</span> customerType) &#123;</span><br><span class="line">        dataSources.<span class="built_in">set</span>(customerType);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//获取数据源</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">String</span> getDataSource() &#123;</span><br><span class="line">        <span class="keyword">return</span> (<span class="keyword">String</span>) dataSources.<span class="built_in">get</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//清除数据源</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> clearDataSource() &#123;</span><br><span class="line">        dataSources.remove();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="步骤2">步骤2</h2><p>实现AbstractRoutingDataSource<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public <span class="class"><span class="keyword">class</span> <span class="title">DynamicDataSource</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">AbstractRoutingDataSource</span> &#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="type">Object</span> determineCurrentLookupKey() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="type">DataSourceHolder</span>.getDataSource();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="步骤3">步骤3</h2><p>配置 spring 文件<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean <span class="property">id</span>=<span class="string">"adamDataSource1"</span> <span class="type">class</span>=<span class="string">"com.alibaba.druid.pool.DruidDataSource"</span></span><br><span class="line">          destroy-method=<span class="string">"close"</span>&gt;</span><br><span class="line">    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"url"</span> value=<span class="string">"jdbc:mysql://localhost:3306/am?useUnicode=true&amp;amp;characterEncoding=utf8"</span>/&gt;</span><br><span class="line">    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"username"</span> value=<span class="string">"root"</span> /&gt;</span><br><span class="line">    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"password"</span> value=<span class="string">"root"</span> /&gt;</span><br><span class="line">    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"filters"</span> value=<span class="string">"stat"</span> /&gt;</span><br><span class="line">    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"maxActive"</span> value=<span class="string">"500"</span> /&gt;</span><br><span class="line">    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"initialSize"</span> value=<span class="string">"10"</span> /&gt;</span><br><span class="line">    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"maxWait"</span> value=<span class="string">"60000"</span> /&gt;</span><br><span class="line">    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"minIdle"</span> value=<span class="string">"10"</span> /&gt;</span><br><span class="line">    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"timeBetweenEvictionRunsMillis"</span> value=<span class="string">"60000"</span> /&gt;</span><br><span class="line">    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"minEvictableIdleTimeMillis"</span> value=<span class="string">"300000"</span> /&gt;</span><br><span class="line">    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"validationQuery"</span> value=<span class="string">"SELECT 'x'"</span> /&gt;</span><br><span class="line">    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"testWhileIdle"</span> value=<span class="string">"true"</span> /&gt;</span><br><span class="line">    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"testOnBorrow"</span> value=<span class="string">"false"</span> /&gt;</span><br><span class="line">    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"testOnReturn"</span> value=<span class="string">"false"</span> /&gt;</span><br><span class="line">&lt;/bean&gt;</span><br><span class="line">&lt;bean <span class="property">id</span>=<span class="string">"adamDataSource2"</span> <span class="type">class</span>=<span class="string">"com.alibaba.druid.pool.DruidDataSource"</span></span><br><span class="line">          destroy-method=<span class="string">"close"</span>&gt;</span><br><span class="line">    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"url"</span> value=<span class="string">"jdbc:mysql://localhost:3306/am2?useUnicode=true&amp;amp;characterEncoding=utf8"</span>/&gt;</span><br><span class="line">    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"username"</span> value=<span class="string">"root"</span> /&gt;</span><br><span class="line">    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"password"</span> value=<span class="string">"root"</span> /&gt;</span><br><span class="line">    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"filters"</span> value=<span class="string">"stat"</span> /&gt;</span><br><span class="line">    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"maxActive"</span> value=<span class="string">"500"</span> /&gt;</span><br><span class="line">    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"initialSize"</span> value=<span class="string">"10"</span> /&gt;</span><br><span class="line">    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"maxWait"</span> value=<span class="string">"60000"</span> /&gt;</span><br><span class="line">    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"minIdle"</span> value=<span class="string">"10"</span> /&gt;</span><br><span class="line">    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"timeBetweenEvictionRunsMillis"</span> value=<span class="string">"60000"</span> /&gt;</span><br><span class="line">    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"minEvictableIdleTimeMillis"</span> value=<span class="string">"300000"</span> /&gt;</span><br><span class="line">    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"validationQuery"</span> value=<span class="string">"SELECT 'x'"</span> /&gt;</span><br><span class="line">    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"testWhileIdle"</span> value=<span class="string">"true"</span> /&gt;</span><br><span class="line">    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"testOnBorrow"</span> value=<span class="string">"false"</span> /&gt;</span><br><span class="line">    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"testOnReturn"</span> value=<span class="string">"false"</span> /&gt;</span><br><span class="line">&lt;/bean&gt;</span><br><span class="line"></span><br><span class="line">&lt;bean <span class="property">id</span>=<span class="string">"dataSource"</span> <span class="type">class</span>=<span class="string">"com.guall.dao.DynamicDataSource"</span>&gt;</span><br><span class="line">    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"targetDataSources"</span>&gt;</span><br><span class="line">    &lt;map key-type=<span class="string">"java.lang.String"</span>&gt;</span><br><span class="line">       &lt;entry key=<span class="string">"adamDataSource1"</span> value-<span class="keyword">ref</span>=<span class="string">"adamDataSource1"</span>&gt;&lt;/entry&gt;</span><br><span class="line">       &lt;entry key=<span class="string">"adamDataSource2"</span> value-<span class="keyword">ref</span>=<span class="string">"adamDataSource2"</span>&gt;&lt;/entry&gt;</span><br><span class="line">    &lt;/map&gt;</span><br><span class="line">    &lt;/<span class="keyword">property</span>&gt;</span><br><span class="line">    &lt;!<span class="comment">-- 默认目标数据源为你主库数据源 --&gt;</span></span><br><span class="line">    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"defaultTargetDataSource"</span> <span class="keyword">ref</span>=<span class="string">"adamDataSource"</span>/&gt;</span><br><span class="line">&lt;/bean&gt;</span><br><span class="line">&lt;bean <span class="property">id</span>=<span class="string">"adamJdbcTemplate"</span> <span class="type">class</span>=<span class="string">"org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate"</span>&gt;</span><br><span class="line">    &lt;constructor-arg <span class="property">name</span>=<span class="string">"dataSource"</span> <span class="keyword">ref</span>=<span class="string">"dataSource"</span>/&gt;</span><br><span class="line">&lt;/bean&gt;</span><br><span class="line">&lt;bean <span class="property">id</span>=<span class="string">"sessionFactory"</span> <span class="type">class</span>=<span class="string">"org.springframework.orm.hibernate4.LocalSessionFactoryBean"</span>&gt;</span><br><span class="line">    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"dataSource"</span> <span class="keyword">ref</span>=<span class="string">"dataSource"</span> /&gt;</span><br><span class="line">    &lt;<span class="keyword">property</span> <span class="property">name</span>=<span class="string">"hibernateProperties"</span>&gt;</span><br><span class="line">        &lt;props&gt;</span><br><span class="line">            &lt;<span class="keyword">prop</span> key=<span class="string">"hibernate.dialect"</span>&gt;org.hibernate.dialect.MySQLDialect&lt;/<span class="keyword">prop</span>&gt;</span><br><span class="line">            &lt;<span class="keyword">prop</span> key=<span class="string">"hibernate.hbm2ddl.auto"</span>&gt;update&lt;/<span class="keyword">prop</span>&gt;</span><br><span class="line">            &lt;<span class="keyword">prop</span> key=<span class="string">"hibernate.show_sql"</span>&gt;<span class="constant">true</span>&lt;/<span class="keyword">prop</span>&gt;</span><br><span class="line">            &lt;<span class="keyword">prop</span> key=<span class="string">"hibernate.format_sql"</span>&gt;<span class="constant">true</span>&lt;/<span class="keyword">prop</span>&gt;</span><br><span class="line">        &lt;/props&gt;</span><br><span class="line">    &lt;/<span class="keyword">property</span>&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="步骤4">步骤4</h2><p>前三步已经完成了所有的准备工作，剩下的就是在采取不同的方式，根据需要来切换数据源了。可以用到的方式，如 Filter、Interceptor、AOP 等。</p>
+<h1 id="高级用法">高级用法</h1><p>不预先配置多种数据源，通过重写determineTargetDataSource方法，按照自己的方式进行数据源的创建和获取操作。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://bcllemon.github.com/2015/12/04/2015/spring-dynamic-datasource/" data-id="cihrap6sf000fpypyt3dxhpfq" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-2015/wechat-yao" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/12/03/2015/wechat-yao/" class="article-date">
+  <time datetime="2015-12-03T08:37:00.000Z" itemprop="datePublished">2015-12-03</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/03/2015/wechat-yao/">微信公众号摇一摇开发</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言">前言</h1><p>看了<a href="http://yalishizhude.github.io/2015/11/17/shake-nearby/?hmsr=toutiao.io&amp;utm_medium=toutiao.io&amp;utm_source=toutiao.io" target="_blank" rel="external">那么多“扫一扫”，不妨“摇一摇”——微信“摇一摇周边”功能开发实录</a>的文章，玩了一次开发。结果发现有些微信已经提供 web 方式操作，还有些逻辑说的不甚明了，所以记录下过程。</p>
+<h1 id="先决条件">先决条件</h1><p>订阅号或者服务号完成认证</p>
+<h1 id="开通摇一摇周边功能。">开通摇一摇周边功能。</h1><p>开通方式：添加功能插件-&gt;摇一摇周边-&gt;使用公众号登录-&gt;申请开通<br>填写相关信息及证明文件后，等待审核。<br><img src="http://7xnhcl.com1.z0.glb.clouddn.com/yao-1.png" alt=""><br><img src="http://7xnhcl.com1.z0.glb.clouddn.com/yao-2.png" alt=""><br><img src="http://7xnhcl.com1.z0.glb.clouddn.com/yao-3.png" alt=""><br><img src="http://7xnhcl.com1.z0.glb.clouddn.com/yao-4.png" alt=""></p>
+<h1 id="iBeacon设备">iBeacon设备</h1><h2 id="购买设备iBeacon设备。">购买设备iBeacon设备。</h2><p>这个可以从淘宝上购买，也可以通过认证后，从<a href="https://zb.weixin.qq.com/nearby/html/guide/buyDeviceGuide.html" target="_blank" rel="external">微信官方</a>渠道进行购买。</p>
+<h2 id="新增设备">新增设备</h2><p>从周边后台添加新增设备<br><img src="http://7xnhcl.com1.z0.glb.clouddn.com/yao-5.png" alt=""><br>由于我是自行购买设备，所以选择了方式2。之后填写需要的数量和理由后，完成申请。<br><img src="http://7xnhcl.com1.z0.glb.clouddn.com/yao-6.png" alt=""></p>
+<p>申请之后的设备在未激活设备处可以看到。<br><img src="http://7xnhcl.com1.z0.glb.clouddn.com/yao-7.png" alt=""><br>查看设备信息，可以得到对应的UUID、Major、Minor信息<br><img src="http://7xnhcl.com1.z0.glb.clouddn.com/yao-8.png" alt=""></p>
+<h2 id="配置设备">配置设备</h2><p>使用厂家提供的工具将上面获得的UUID、Major、Minor写入设备</p>
+<h2 id="激活设备">激活设备</h2><p>保证设备电源处于开启状态，打开手机蓝牙，打开微信摇一摇功能，选择周边，然后摇，能够发现设备，点击后，可完成激活。完成后，可在<a href="https://zb.weixin.qq.com/nearby/html/device/manage.html" target="_blank" rel="external">周边后台</a>看到设备状态。具体可以参考<a href="https://zb.weixin.qq.com/nearby/instruction.xhtml?section=4" target="_blank" rel="external">设备配置指引</a> <a href="https://zb.weixin.qq.com/nearby/instruction.xhtml?section=5" target="_blank" rel="external">如何激活设备？</a></p>
+<h1 id="页面配置">页面配置</h1><p>点击页面管理、新建页面、选择配置设备</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://bcllemon.github.com/2015/12/03/2015/wechat-yao/" data-id="cihrap6sd000cpypymrh4l691" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-2015/cygwin-zsh" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/11/01/2015/cygwin-zsh/" class="article-date">
+  <time datetime="2015-11-01T06:35:00.000Z" itemprop="datePublished">2015-11-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/11/01/2015/cygwin-zsh/">cygwin 安装 zsh</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://bcllemon.github.com/2015/11/01/2015/cygwin-zsh/" data-id="cihrap6su000qpypy7iqutx2b" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-2015/python-java-aes" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2015/10/29/2015/python-java-aes/" class="article-date">
@@ -98,16 +240,37 @@ var _hmt = _hmt || [];
       
         <h1 id="AES">AES</h1><p>密码学中的高级加密标准（Advanced Encryption Standard，AES），又称高级加密标准Rijndael加密法，<br>是美国联邦政府采用的一种区块加密标准。这个标准用来替代原先的DES，已经被多方分析且广为全世界<br>所使用。经过五年的甄选流程，高级加密标准由美国国家标准与技术研究院 （NIST）于2001年11月26日<br>发布于FIPS PUB197，并在2002年5月26日成为有效的标准。2006年，高级加密标准已然成为对称密钥加密<br>中最流行的算法之一。该算法为比利时密码学家Joan Daemen和VincentRijmen所设计，结合两位作者的名<br>字，以Rijndael之命名之，投稿高级加密标准的甄选流程。（Rijdael的发音近于 “Rhinedoll”。）</p>
 <h2 id="加密填充模式">加密填充模式</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">算法/模式/填充                <span class="number">16</span>字节加密后数据长度        不满<span class="number">16</span>字节加密后长度</span><br><span class="line">AES/CBC/NoPadding             <span class="number">16</span>                          不支持</span><br><span class="line">AES/CBC/PKCS5Padding          <span class="number">32</span>                          <span class="number">16</span></span><br><span class="line">AES/CBC/ISO10126Padding       <span class="number">32</span>                          <span class="number">16</span></span><br><span class="line">AES/CFB/NoPadding             <span class="number">16</span>                          原始数据长度</span><br><span class="line">AES/CFB/PKCS5Padding          <span class="number">32</span>                          <span class="number">16</span></span><br><span class="line">AES/CFB/ISO10126Padding       <span class="number">32</span>                          <span class="number">16</span></span><br><span class="line">AES/ECB/NoPadding             <span class="number">16</span>                          不支持</span><br><span class="line">AES/ECB/PKCS5Padding          <span class="number">32</span>                          <span class="number">16</span></span><br><span class="line">AES/ECB/ISO10126Padding       <span class="number">32</span>                          <span class="number">16</span></span><br><span class="line">AES/OFB/NoPadding             <span class="number">16</span>                          原始数据长度</span><br><span class="line">AES/OFB/PKCS5Padding          <span class="number">32</span>                          <span class="number">16</span></span><br><span class="line">AES/OFB/ISO10126Padding       <span class="number">32</span>                          <span class="number">16</span></span><br><span class="line">AES/PCBC/NoPadding            <span class="number">16</span>                          不支持</span><br><span class="line">AES/PCBC/PKCS5Padding         <span class="number">32</span>                          <span class="number">16</span></span><br><span class="line">AES/PCBC/ISO10126Padding      <span class="number">32</span>                          <span class="number">16</span></span><br></pre></td></tr></table></figure>
-<h1 id="ECB">ECB</h1><h2 id="Java">Java</h2><figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">String</span> <span class="variable">key</span> = <span class="string">"1234567890123456"</span>;</span><br><span class="line"></span><br><span class="line">SecretKey secretKey = <span class="keyword">new</span> SecretKeySpec(<span class="variable">key</span>.getBytes(), <span class="string">"AES"</span>);</span><br><span class="line">Cipher cipher = Cipher.getInstance(<span class="string">"AES"</span>);</span><br><span class="line"><span class="keyword">String</span> data = <span class="string">"abcd"</span>;</span><br><span class="line">cipher.init(Cipher.ENCRYPT_MODE, secretKey);</span><br><span class="line"><span class="built_in">byte</span>[] encrypted = cipher.doFinal(data.getBytes());</span><br><span class="line">System.out.<span class="built_in">println</span>(Encodes.encodeBase64(encrypted));</span><br><span class="line"></span><br><span class="line">cipher.init(Cipher.DECRYPT_MODE, secretKey);</span><br><span class="line">System.out.<span class="built_in">println</span>(<span class="keyword">new</span> <span class="keyword">String</span>(cipher.doFinal(encrypted)));</span><br></pre></td></tr></table></figure>
+<h1 id="ECB(Electronic_Code_Book电子密码本)模式">ECB(Electronic Code Book电子密码本)模式</h1><p>ECB模式是最早采用和最简单的模式，它将加密的数据分成若干组，每组的大小跟加密密钥长度相同，然后每组都用相同的密钥进行加密。<br><strong>优点:</strong></p>
+<ul>
+<li>模式操作简单；</li>
+<li>有利于并行计算；</li>
+<li>误差不会被传送；</li>
+</ul>
+<p><strong>缺点:</strong></p>
+<ul>
+<li>不能隐藏明文的模式，明文中的重复内容在密文中暴露出来；</li>
+<li>可能对明文进行主动攻击；</li>
+</ul>
+<p>因此，此模式适于加密小消息。</p>
+<h2 id="Java">Java</h2><figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">String</span> <span class="variable">key</span> = <span class="string">"1234567890123456"</span>;</span><br><span class="line"></span><br><span class="line">SecretKey secretKey = <span class="keyword">new</span> SecretKeySpec(<span class="variable">key</span>.getBytes(), <span class="string">"AES"</span>);</span><br><span class="line">Cipher cipher = Cipher.getInstance(<span class="string">"AES"</span>);</span><br><span class="line"><span class="keyword">String</span> data = <span class="string">"abcd"</span>;</span><br><span class="line">cipher.init(Cipher.ENCRYPT_MODE, secretKey);</span><br><span class="line"><span class="built_in">byte</span>[] encrypted = cipher.doFinal(data.getBytes());</span><br><span class="line">System.out.<span class="built_in">println</span>(Encodes.encodeBase64(encrypted));</span><br><span class="line"></span><br><span class="line">cipher.init(Cipher.DECRYPT_MODE, secretKey);</span><br><span class="line">System.out.<span class="built_in">println</span>(<span class="keyword">new</span> <span class="keyword">String</span>(cipher.doFinal(encrypted)));</span><br></pre></td></tr></table></figure>
 <h2 id="Python">Python</h2><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">from</span> Crypto.Cipher import AES</span><br><span class="line"><span class="built_in">from</span> itsdangerous import base64_encode,base64_decode</span><br><span class="line"></span><br><span class="line">BS = AES.block_size</span><br><span class="line">pad = lambda s: s + (BS - <span class="built_in">len</span>(s) % BS) * chr(BS - <span class="built_in">len</span>(s) % BS)</span><br><span class="line">unpad = lambda s : s[<span class="number">0</span>:-ord(s[-<span class="number">1</span>])]</span><br><span class="line"></span><br><span class="line"><span class="comment"># key = os.urandom(16) # the length can be (16, 24, 32)</span></span><br><span class="line">key = b<span class="string">'1234567890123456'</span></span><br><span class="line"><span class="keyword">text</span> = <span class="string">'abcd'</span></span><br><span class="line">cipher = AES.<span class="built_in">new</span>(key)</span><br><span class="line">print base64_encode(cipher.<span class="built_in">encrypt</span>(pad(<span class="keyword">text</span>)))</span><br><span class="line">print cipher.<span class="built_in">decrypt</span>(base64_decode(base64_encode(cipher.<span class="built_in">encrypt</span>(pad(<span class="keyword">text</span>)))))</span><br></pre></td></tr></table></figure>
-<h1 id="CBC">CBC</h1><p>CBC模式的加加解密，要求 key 和 IV 都必须要一致</p>
+<h1 id="CBC(Cipher_Block_Chaining，加密块链)模式">CBC(Cipher Block Chaining，加密块链)模式</h1><p>为了克服ECB模式的安全缺陷，设计了密码分组链接模式，它使得当同一个明文分组重复出现时产生不同的密文分组。对每个分组使用相同的密钥，加密函数的输入是当前的明文分组和前一个密文分组的异或。从效果上看，将明文分组序列的处理连接起来了。<br>为了产生第一个密文分组，要使用一个初始向量IV，IV必须被发送方和接收方都知道，为了做到最大程度的安全性，IV应该和密钥一样受到保护。<br>CBC模式的加加解密，要求 key 和 IV 都必须要一致<br><strong>优点：</strong></p>
+<ul>
+<li>不容易主动攻击,安全性好于ECB,适合传输长度长的报文,是SSL、IPSec的标准。</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>不利于并行计算；</li>
+<li>误差传递；</li>
+<li>需要初始化向量IV</li>
+</ul>
 <h2 id="Java-1">Java</h2><figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">String</span> iv=<span class="string">"1234567890123456"</span>;</span><br><span class="line"><span class="keyword">String</span> <span class="variable">key</span> = <span class="string">"1234567890123456"</span>;</span><br><span class="line"></span><br><span class="line">SecretKey secretKey = <span class="keyword">new</span> SecretKeySpec(<span class="variable">key</span>.getBytes(), <span class="string">"AES"</span>);</span><br><span class="line">Cipher cipher = Cipher.getInstance(<span class="string">"AES/CBC/PKCS5Padding"</span>);</span><br><span class="line">IvParameterSpec ivspec = <span class="keyword">new</span> IvParameterSpec(iv.getBytes());</span><br><span class="line"><span class="keyword">String</span> data = <span class="string">"abcd"</span>;</span><br><span class="line"><span class="built_in">int</span> blockSize = cipher.getBlockSize();</span><br><span class="line"><span class="built_in">byte</span>[] dataBytes = data.getBytes();</span><br><span class="line"><span class="built_in">int</span> plaintextLength = dataBytes.length;</span><br><span class="line"><span class="keyword">if</span> (plaintextLength % blockSize != <span class="number">0</span>) &#123;</span><br><span class="line">    plaintextLength = plaintextLength + (blockSize - (plaintextLength % blockSize));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">byte</span>[] plaintext = <span class="keyword">new</span> <span class="built_in">byte</span>[plaintextLength];</span><br><span class="line">System.arraycopy(dataBytes, <span class="number">0</span>, plaintext, <span class="number">0</span>, dataBytes.length);</span><br><span class="line">cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivspec);</span><br><span class="line"><span class="built_in">byte</span>[] encrypted = cipher.doFinal(plaintext);</span><br><span class="line">System.out.<span class="built_in">println</span>(Encodes.encodeBase64(encrypted));</span><br><span class="line"></span><br><span class="line">cipher.init(Cipher.DECRYPT_MODE, secretKey,ivspec);</span><br><span class="line">System.out.<span class="built_in">println</span>(<span class="keyword">new</span> <span class="keyword">String</span>(cipher.doFinal(encrypted)));</span><br></pre></td></tr></table></figure>
 <h2 id="Python-1">Python</h2><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">from</span> Crypto.Cipher <span class="preprocessor">import</span> AES</span><br><span class="line"><span class="label">import</span> os</span><br><span class="line"><span class="label">from</span> <span class="keyword">itsdangerous </span><span class="preprocessor">import</span> <span class="keyword">base64_encode, </span><span class="keyword">base64_decode</span><br><span class="line"></span></span><br><span class="line"><span class="keyword">BS </span>= AES.<span class="keyword">block_size</span><br><span class="line"></span><span class="label">pad</span> = lambda s: s + (<span class="keyword">BS </span>- len(s) % <span class="keyword">BS) </span>* chr(<span class="keyword">BS </span>- len(s) % <span class="keyword">BS)</span><br><span class="line"></span><span class="label">unpad</span> = lambda s: s[<span class="number">0</span>:-ord(s[-<span class="number">1</span>])]</span><br><span class="line"></span><br><span class="line"># key = os.urandom(<span class="number">16</span>) # the length can <span class="keyword">be </span>(<span class="number">16</span>, <span class="number">24</span>, <span class="number">32</span>)</span><br><span class="line"><span class="label">key</span> = <span class="keyword">b'1234567890123456'</span><br><span class="line"></span><span class="label">text</span> = <span class="string">'abcd'</span></span><br><span class="line"><span class="label">IV</span> = <span class="keyword">b'1234567890123456'</span><br><span class="line"></span><span class="label">cipher</span> = AES.new(key, AES.MODE_CBC, IV<span class="label">=IV</span>)</span><br><span class="line"></span><br><span class="line"><span class="label">data</span> = <span class="keyword">base64_encode(cipher.encrypt(pad(text)))</span><br><span class="line"></span></span><br><span class="line"><span class="label">print</span> <span class="preprocessor">data</span></span><br><span class="line">#</span><br><span class="line"><span class="label">cipher</span> = AES.new(key, AES.MODE_CBC, IV<span class="label">=IV</span>)</span><br><span class="line"><span class="label">print</span> cipher.decrypt(<span class="keyword">base64_decode(data))</span></span><br></pre></td></tr></table></figure>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.com/2015/10/29/2015/python-java-aes/" data-id="cigc18sst00002ppyknyy5q2r" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.com/2015/10/29/2015/python-java-aes/" data-id="cihrap6si000ipypy17dtk1eh" class="article-share-link">Share</a>
       
       
     </footer>
@@ -148,7 +311,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.com/2015/10/29/2015/-ffmpeg-mp4-/" data-id="cigbuq07f000030pyktz3m2ro" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.com/2015/10/29/2015/-ffmpeg-mp4-/" data-id="cihrap6rg0000pypyodmtu1ly" class="article-share-link">Share</a>
       
       
     </footer>
@@ -203,7 +366,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.com/2015/10/27/2015/nginx-lua-redis/" data-id="cig977pop0000afpyjht3gpoz" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.com/2015/10/27/2015/nginx-lua-redis/" data-id="cihrap6sk000kpypy6pzrlyvv" class="article-share-link">Share</a>
       
       
     </footer>
@@ -246,7 +409,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.com/2015/10/22/2015/zaji/" data-id="cig1loj5e0000gtpyi7w3rs6d" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.com/2015/10/22/2015/zaji/" data-id="cihrap6sc0009pypygt6tljdt" class="article-share-link">Share</a>
       
       
     </footer>
@@ -338,7 +501,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.com/2015/10/21/2015/react-native-for-android--/" data-id="cig0mqdw70005d8pyax6tv24o" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.com/2015/10/21/2015/react-native-for-android--/" data-id="cihrap6sg000gpypy19rdh87o" class="article-share-link">Share</a>
       
       
     </footer>
@@ -391,7 +554,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.com/2015/10/18/2015/mongodbpython/" data-id="cig0mqdw90007d8pyzqb9d2zq" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.com/2015/10/18/2015/mongodbpython/" data-id="cihrap6so000mpypyqjuer1he" class="article-share-link">Share</a>
       
       
     </footer>
@@ -434,7 +597,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.com/2015/10/16/2015/iosdevicetoken/" data-id="cig0mqdvm0000d8py2bcwqtyg" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.com/2015/10/16/2015/iosdevicetoken/" data-id="cihrap6sr000opypyhmr3y078" class="article-share-link">Share</a>
       
       
     </footer>
@@ -444,70 +607,10 @@ var _hmt = _hmt || [];
 
 
   
-    <article id="post-https" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/10/13/https/" class="article-date">
-  <time datetime="2015-10-13T08:13:45.000Z" itemprop="datePublished">2015-10-13</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/技术/">技术</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/13/https/">Nginx+Tomcat 配置 https</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="SSL/TLS简介">SSL/TLS简介</h1><p>安全传输层协议（TLS）与其前辈加密套接字（SSL）都是用于保证 Web 浏览器与 Web 服务器通过安全连接进行通信的技术。利用这些技术，我们所要传送的数据会在一端进行加密，传输到另一端后再进行解密（在处理数据之前）。这是一种双向的操作，服务器和浏览器都能在发送数据前对它们进行加密处理。</p>
-<p>SSL/TLS 协议的另一个重要方面是认证。当我们初始通过安全连接与 Web 服务器进行通信时，服务器将提供给 Web 浏览器一组“证书”形式的凭证，用来证明站点的归属方以及站点的具体声明。某些情况下，服务器也会请求浏览器出示证书，来证明作为操作者的“你”所宣称的身份是否属实。这种证书叫做“客户端证书”，但事实上它更多地用于 B2B（企业对企业电子商务）的交易中，而并非针对个人用户。大多数启用了 SSL 协议的 Web 服务器都不需要客户端认证。</p>
-<h1 id="证书申请">证书申请</h1><h2 id="使用_OpenSSL_生成_SSL_Key_和_CSR">使用 OpenSSL 生成 SSL Key 和 CSR</h2><p>域名，也称为 Common Name，因为特殊的证书不一定是域名：example.com</p>
-<p>组织或公司名字（Organization）：Example, Inc.</p>
-<p>部门（Department）：可以不填写，这里我们写 Web Security</p>
-<p>城市（City）：Beijing</p>
-<p>省份（State / Province）：Beijing</p>
-<p>国家（Country）：CN</p>
-<p>加密强度：2048 位，如果你的机器性能强劲，也可以选择 4096 位</p>
-<p>按照以上信息，使用 OpenSSL 生成 key 和 csr 的命令如下</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl req -new -newkey rsa:<span class="number">2048</span> -sha256 -nodes -out example_com<span class="class">.csr</span> -keyout example_com<span class="class">.key</span> -subj <span class="string">"/C=CN/ST=Beijing/L=Beijing/O=Example Inc./OU=Web Security/CN=example.com"</span></span><br></pre></td></tr></table></figure>
-<p>PS：如果是泛域名证书，则应该填写*.example.com<br>你可以在系统的任何地方运行这个命令，会自动在当前目录生成 example_com.csr 和 example_com.key 这两个文件<br>这个 CSR 文件就是你需要提交给 SSL 认证机构的，当你的域名或组织通过验证后，认证机构就会颁发给你一个 example_com.crt<br>而 example_com.key 是需要用在 Nginx 配置里和 example_com.crt 配合使用的，需要好好保管，千万别泄露给任何第三方。</p>
-<h1 id="Nginx">Nginx</h1><h2 id="证书处理">证书处理</h2><p>Nginx和Tomcat不一样，它要求的是证书文件 .crt 和私钥 .key 。遗憾的是，我们的私钥在keystore里面，而JDK自带的keytool并不提供私钥的导出功能，所以我们得借助第三方工具来导出私钥。</p>
-<h3 id="1-_导出私钥">1. 导出私钥</h3><p>有一个开源的私钥导出工具叫做 <a href="http://www.oschina.net/p/java-exportpriv" title="java-exportpriv" target="_blank" rel="external">java-exportpriv</a> 。它是一个简单的java程序，你下载以后参考它的说明，编译，然后运行即可，非常简单，我就不多罗嗦了。</p>
-<h3 id="2-_创建_crt">2. 创建 crt</h3><p>和Apache不一样，Nginx没有Certificat Chain这个参数，所以你要把你的证书和中间证书合并。合并证书很简单，创建一个先的文件 oschina-chain.crt，内容如下：<br><figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">BEGIN</span> <span class="comment">CERTIFICATE</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span></span><br><span class="line"><span class="comment">这里是你证书的内容</span></span><br><span class="line"><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">END</span> <span class="comment">CERTIFICATE</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span></span><br><span class="line"><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">BEGIN</span> <span class="comment">CERTIFICATE</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span></span><br><span class="line"><span class="comment">这里是中间证书的内容</span></span><br><span class="line"><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">END</span> <span class="comment">CERTIFICATE</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span></span><br></pre></td></tr></table></figure></p>
-<h2 id="修改配置">修改配置</h2><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">server</span> &#123;</span><br><span class="line">      <span class="title">listen</span>       <span class="number">443</span> ssl;</span><br><span class="line">      <span class="title">server_name</span>  localhost;</span><br><span class="line">      <span class="title">ssl</span>                  <span class="built_in">on</span>;</span><br><span class="line">      <span class="title">ssl_certificate</span>      /oschina/webapp/oschina-chain.crt;</span><br><span class="line">      <span class="title">ssl_certificate_key</span>  /oschina/webapp/oschina.key;</span><br><span class="line"></span><br><span class="line">  <span class="title">location</span> / &#123;</span><br><span class="line">          <span class="title">include</span> proxy.conf;</span><br><span class="line">          <span class="title">proxy_pass</span>   <span class="url">https://61.145.122.155:443</span>;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-<h2 id="强制_https">强制 https</h2><figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen <span class="number">80</span>;</span><br><span class="line">    server_name localhost;</span><br><span class="line">    rewrite ^/(.*) https://<span class="variable">$server</span>_name/<span class="variable">$1</span> permanent;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="增强">增强</h2><p>但是这么做并不安全，默认是 SHA-1 形式，而现在主流的方案应该都避免 SHA-1，为了确保更强的安全性，我们可以采取迪菲－赫尔曼密钥交换</p>
-<p>首先，进入 /etc/ssl/certs 目录并生成一个 dhparam.pem<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl dhparam -out dhparam.pem <span class="number">2048</span> <span class="preprocessor"># 如果你的机器性能足够强大，可以用 <span class="number">4096</span> 位加密</span></span><br></pre></td></tr></table></figure></p>
-<p>生成完毕后，在 Nginx 的 SSL 配置后面加入<br><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">ssl_prefer_server_ciphers</span> <span class="built_in">on</span>;</span><br><span class="line"><span class="title">ssl_dhparam</span> /etc/ssl/certs/dhparam.pem;</span><br><span class="line"><span class="title">ssl_protocols</span> TLSv1 TLSv1.<span class="number">1</span> TLSv1.<span class="number">2</span>;</span><br><span class="line"><span class="title">ssl_ciphers</span> <span class="string">"EECDH+ECDSA+AESGCM EECDH+aRSA+AESGCM EECDH+ECDSA+SHA384 EECDH+ECDSA+SHA256 EECDH+aRSA+SHA384 EECDH+aRSA+SHA256 EECDH+aRSA+RC4 EECDH EDH+aRSA !aNULL !eNULL !LOW !3DES !MD5 !EXP !PSK !SRP !DSS !RC4"</span>;</span><br><span class="line"><span class="title">keepalive_timeout</span> <span class="number">70</span>;</span><br><span class="line"><span class="title">ssl_session_cache</span> shared:SSL:<span class="number">10m</span>;</span><br><span class="line"><span class="title">ssl_session_timeout</span> <span class="number">10m</span>;</span><br></pre></td></tr></table></figure></p>
-<p>同时，如果是全站 HTTPS 并且不考虑 HTTP 的话，可以加入 HSTS 告诉你的浏览器本网站全站加密，并且强制用 HTTPS 访问<br><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add_header </span><span class="keyword">Strict-Transport-Security </span>max-age<span class="number">=63072000</span><span class="comment">;</span></span><br><span class="line"><span class="keyword">add_header </span>X-Frame-Options DENY<span class="comment">;</span></span><br><span class="line"><span class="keyword">add_header </span>X-Content-Type-Options nosniff<span class="comment">;</span></span><br></pre></td></tr></table></figure></p>
-<h1 id="Tomcat">Tomcat</h1><h2 id="证书">证书</h2><p>Tomcat要求的是包含签名过证书的keystore文件和keystore密码。所以我们要先把证书导入keystore<br><figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$JAVA</span>_HOME/bin/keytool -<span class="keyword">import</span> -alias oschina -trustcacerts -file oschina.p7s  -keystore oschina.keystore</span><br></pre></td></tr></table></figure></p>
-<p>上面的命令中 alias “oschina” 和之前申请证书的时候输入的 alias 要一致。</p>
-<h2 id="修改Tomcat配置">修改Tomcat配置</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;Connector SSLEnabled=<span class="string">"true"</span> acceptCount=<span class="string">"100"</span> clientAuth=<span class="string">"false"</span></span><br><span class="line">        <span class="built_in">disable</span>UploadTimeout=<span class="string">"true"</span> <span class="built_in">enable</span>Lookups=<span class="string">"false"</span> maxThreads=<span class="string">"25"</span></span><br><span class="line">        port=<span class="string">"8443"</span> keystoreFile=<span class="string">"/oschina/webapp/oschina.keystore"</span> keystorePass=<span class="string">"xxxxxxx"</span></span><br><span class="line">        protocol=<span class="string">"org.apache.coyote.http11.Http11NioProtocol"</span> scheme=<span class="string">"https"</span></span><br><span class="line">        secure=<span class="string">"true"</span> sslProtocol=<span class="string">"TLS"</span> /&gt;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://bcllemon.github.com/2015/10/13/https/" data-id="cig0mqdw30003d8pyqclu3nry" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
+    <nav id="page-nav">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+    </nav>
   
 </section>
         
@@ -517,7 +620,7 @@ var _hmt = _hmt || [];
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂记/">杂记</a><span class="category-list-count">1</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂记/">杂记</a><span class="category-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -530,7 +633,7 @@ var _hmt = _hmt || [];
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">8</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">8</span></li></ul>
     </div>
   </div>
 
@@ -542,23 +645,23 @@ var _hmt = _hmt || [];
       <ul>
         
           <li>
+            <a href="/2015/12/04/2015/spring-dynamic-datasource/">spring动态数据源</a>
+          </li>
+        
+          <li>
+            <a href="/2015/12/03/2015/wechat-yao/">微信公众号摇一摇开发</a>
+          </li>
+        
+          <li>
+            <a href="/2015/11/01/2015/cygwin-zsh/">cygwin 安装 zsh</a>
+          </li>
+        
+          <li>
             <a href="/2015/10/29/2015/python-java-aes/">Python Java AES</a>
           </li>
         
           <li>
             <a href="/2015/10/29/2015/-ffmpeg-mp4-/">用 FFMPEG 合并 MP4 视频</a>
-          </li>
-        
-          <li>
-            <a href="/2015/10/27/2015/nginx-lua-redis/">nginx-lua-redis</a>
-          </li>
-        
-          <li>
-            <a href="/2015/10/22/2015/zaji/">杂记</a>
-          </li>
-        
-          <li>
-            <a href="/2015/10/21/2015/react-native-for-android--/">React Native for Android 环境搭建-坑</a>
           </li>
         
       </ul>

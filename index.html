@@ -70,6 +70,56 @@ var _hmt = _hmt || [];
       <div class="outer">
         <section id="main">
   
+    <article id="post-2015/hexo-github-blog" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/12/04/2015/hexo-github-blog/" class="article-date">
+  <time datetime="2015-12-04T15:07:00.000Z" itemprop="datePublished">2015-12-04</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/04/2015/hexo-github-blog/">hexo+github page搭建博客</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="hexo安装">hexo安装</h1><h2 id="安装_nvm">安装 nvm</h2><p><code>curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.29.0/install.sh | bash</code></p>
+<h2 id="安装_Node">安装 Node</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nvm <span class="operator"><span class="keyword">install</span> node &amp;&amp; nvm <span class="keyword">alias</span> <span class="keyword">default</span> node</span><br><span class="line">nvm <span class="keyword">use</span> <span class="comment">--delete-prefix v4.2.1 --silent</span></span></span><br></pre></td></tr></table></figure>
+<h2 id="切换taobao_源">切换taobao 源</h2><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm config <span class="keyword">set</span> registry https:<span class="comment">//registry.npm.taobao.org</span></span><br><span class="line">npm config <span class="keyword">set</span> disturl https:<span class="comment">//npm.taobao.org/dist</span></span><br></pre></td></tr></table></figure>
+<h2 id="安装_hexo">安装 hexo</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="operator"><span class="keyword">install</span> -<span class="keyword">g</span> hexo</span></span><br></pre></td></tr></table></figure>
+<h1 id="hexo_使用">hexo 使用</h1><h2 id="初始化">初始化</h2><figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> hexo</span><br><span class="line"><span class="built_in">cd</span> hexo</span><br><span class="line">hexo init</span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
+<h2 id="生成文件">生成文件</h2><figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo <span class="keyword">ge</span><span class="label">nerate</span></span><br></pre></td></tr></table></figure>
+<p>或<br><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">hexo</span> g</span><br></pre></td></tr></table></figure></p>
+<h2 id="清理文件">清理文件</h2><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">hexo</span> clean</span><br></pre></td></tr></table></figure>
+<h2 id="本地预览">本地预览</h2><figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo <span class="keyword">server</span></span><br></pre></td></tr></table></figure>
+<p>或<br><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">hexo</span> s</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://bcllemon.github.com/2015/12/04/2015/hexo-github-blog/" data-id="cihru84qc0000z3pypvt09kuj" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-2015/spring-dynamic-datasource" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2015/12/04/2015/spring-dynamic-datasource/" class="article-date">
@@ -564,49 +614,6 @@ var _hmt = _hmt || [];
 
 
   
-    <article id="post-2015/iosdevicetoken" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/10/16/2015/iosdevicetoken/" class="article-date">
-  <time datetime="2015-10-16T09:44:00.000Z" itemprop="datePublished">2015-10-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/技术/">技术</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/16/2015/iosdevicetoken/">iOS的DeviceToken随生产环境和开发环境变化</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>当我用XCode直接运行到手机上的时候，Device token是以3开头的，而当我打包上传到fir.im，再下载安装的时候，Device token就变成以5开头了</p>
-<p>其实这是生产环境和开发环境的问题，在这两个环境下Device token是不同的</p>
-<p>如果你手机中的App是通过XCode直接安装的话，那么你的App就属于开发环境，想要推送成功就需要创建开发环境的证书；<br>如果你的App是打包成ipa文件安装的（<font color="red">不管是正式上线还是自己测试</font>），那么就是生产环境，需要创建生产环境证书，这两个环境的Device token是不同的</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://bcllemon.github.com/2015/10/16/2015/iosdevicetoken/" data-id="cihrap6sr000opypyhmr3y078" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -620,7 +627,7 @@ var _hmt = _hmt || [];
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂记/">杂记</a><span class="category-list-count">1</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">10</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂记/">杂记</a><span class="category-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -633,7 +640,7 @@ var _hmt = _hmt || [];
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">8</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">8</span></li></ul>
     </div>
   </div>
 
@@ -643,6 +650,10 @@ var _hmt = _hmt || [];
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2015/12/04/2015/hexo-github-blog/">hexo+github page搭建博客</a>
+          </li>
         
           <li>
             <a href="/2015/12/04/2015/spring-dynamic-datasource/">spring动态数据源</a>
@@ -658,10 +669,6 @@ var _hmt = _hmt || [];
         
           <li>
             <a href="/2015/10/29/2015/python-java-aes/">Python Java AES</a>
-          </li>
-        
-          <li>
-            <a href="/2015/10/29/2015/-ffmpeg-mp4-/">用 FFMPEG 合并 MP4 视频</a>
           </li>
         
       </ul>

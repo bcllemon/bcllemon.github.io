@@ -70,6 +70,58 @@ var _hmt = _hmt || [];
       <div class="outer">
         <section id="main">
   
+    <article id="post-2016/flask-bugs" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/01/12/2016/flask-bugs/" class="article-date">
+  <time datetime="2016-01-11T16:00:00.000Z" itemprop="datePublished">2016-01-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/12/2016/flask-bugs/">Flask入坑指南</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Flask">Flask</h1><h2 id="Session">Session</h2><p>Flask默认 Session 是基于浏览器 Cookie 的，这样很多从 J2EE 转过来的程序员第一次必然掉坑。Flask 官方给了多种解决方案，具体可以参考 <a href="http://flask.pocoo.org/snippets/category/sessions/" target="_blank" rel="external">Sessions</a>。其中基于Redis和 mongodb 的方案比较适合分布式部署。当然你也可以参考里面的实现，按照自己的情况来处理 Session。</p>
+<h2 id="Json返回值">Json返回值</h2><ol>
+<li>FLask出于安全原因不允许返回 Array，只能返回 Object。具体原因参见 <a href="http://flask.pocoo.org/docs/0.10/security/#json-security" target="_blank" rel="external">json-security</a></li>
+<li>默认无法序列化 Decimal。<br>解决办法：安装 simplejson</li>
+</ol>
+<h1 id="Flask-SQLAlchemy/SQLAlchemy">Flask-SQLAlchemy/SQLAlchemy</h1><h2 id="同一个事物中_Query_会自动触发_commit">同一个事物中 Query 会自动触发 commit</h2><p>这个问题严格上说不是 Flask 的，实际是SQLAlchemy的。默认 DB 的 Session 是Autoflash的，这样当你在同一个事物中，既有 update 又有 select 操作的时候，就会出现各种灵异错误。解决办法是使用no_autoflush.<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">with db<span class="class">.session</span><span class="class">.no_autoflush</span>:</span><br><span class="line">    room = Room<span class="class">.query</span><span class="class">.get</span>(pre_order_info.roomId)</span><br></pre></td></tr></table></figure></p>
+<h2 id="Model无法序列化成_json">Model无法序列化成 json</h2><p>model 类继承AutoSerialize，然后转json时调用get_public方法<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AutoSerialize</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="string">'Mixin for retrieving public fields of model in json-compatible format'</span></span><br><span class="line">    __public__ = <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_public</span><span class="params">(self, exclude=<span class="params">()</span>, extra=<span class="params">()</span>)</span>:</span></span><br><span class="line">        <span class="string">"Returns model's PUBLIC data for jsonify"</span></span><br><span class="line">        data = &#123;&#125;</span><br><span class="line">        keys = self._sa_instance_state.attrs.items()</span><br><span class="line">        public = self.__public__ + extra <span class="keyword">if</span> self.__public__ <span class="keyword">else</span> extra</span><br><span class="line">        <span class="keyword">for</span> k, field <span class="keyword">in</span> keys:</span><br><span class="line">            <span class="keyword">if</span> public <span class="keyword">and</span> k <span class="keyword">not</span> <span class="keyword">in</span> public: <span class="keyword">continue</span></span><br><span class="line">            <span class="keyword">if</span> k <span class="keyword">in</span> exclude: <span class="keyword">continue</span></span><br><span class="line">            value = self._serialize(field.value)</span><br><span class="line">            <span class="keyword">if</span> value:</span><br><span class="line">                data[k] = value</span><br><span class="line">        <span class="keyword">return</span> data</span><br><span class="line"></span><br><span class="line"><span class="decorator">    @classmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_serialize</span><span class="params">(cls, value, follow_fk=False)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> isinstance(value, datetime.datetime):</span><br><span class="line">            ret = value.strftime(<span class="string">'%Y-%m-%d %H:%M:%S'</span>)</span><br><span class="line">        <span class="keyword">elif</span> isinstance(value, Decimal):</span><br><span class="line">            ret = str(value)</span><br><span class="line">        <span class="keyword">elif</span> hasattr(value, <span class="string">'__iter__'</span>):</span><br><span class="line">            ret = []</span><br><span class="line">            <span class="keyword">for</span> v <span class="keyword">in</span> value:</span><br><span class="line">                ret.append(cls._serialize(v))</span><br><span class="line">        <span class="keyword">elif</span> AutoSerialize <span class="keyword">in</span> value.__class__.__bases__:</span><br><span class="line">            ret = value.get_public()</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            ret = value</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> ret</span><br></pre></td></tr></table></figure></p>
+<h1 id="Flask-Auth">Flask-Auth</h1><p>许久不更新，与最新版的 Flask 不兼容。这个包本身的设计比较轻巧，此外对于权限的配置是以 Resource+Operation 方式来配置，比较灵活，还是值得一用的。具体修改如下：</p>
+<h1 id="Flask-WTF/WTForms">Flask-WTF/WTForms</h1><ol>
+<li>注意表单类的基类From，要引用flask_wtf中，其在原有WTForms增强了功能。</li>
+<li>对于SelectField类型，无法传空值。会导致validate无法通过。</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://bcllemon.github.io/2016/01/12/2016/flask-bugs/" data-id="cijbm5x8e0006lipy0f0juo9k" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-2015/hexo-github-blog" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2015/12/04/2015/hexo-github-blog/" class="article-date">
@@ -110,7 +162,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2015/12/04/2015/hexo-github-blog/" data-id="ciht8d1cy000nlvpyogd8pu22" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2015/12/04/2015/hexo-github-blog/" data-id="cijbm5x9b000plipy1a4dlpy7" class="article-share-link">Share</a>
       
       
     </footer>
@@ -163,7 +215,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2015/12/04/2015/spring-dynamic-datasource/" data-id="ciht8d1ck000blvpynbxzcjf2" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2015/12/04/2015/spring-dynamic-datasource/" data-id="cijbm5x8k000dlipy7fwn8vea" class="article-share-link">Share</a>
       
       
     </footer>
@@ -212,47 +264,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2015/12/03/2015/wechat-yao/" data-id="ciht8d1ci0009lvpytiirt3on" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-2015/cygwin-zsh" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/11/01/2015/cygwin-zsh/" class="article-date">
-  <time datetime="2015-11-01T06:35:00.000Z" itemprop="datePublished">2015-11-01</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/技术/">技术</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/01/2015/cygwin-zsh/">cygwin 安装 zsh</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2015/11/01/2015/cygwin-zsh/" data-id="ciht8d1d2000plvpy69jlue94" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2015/12/03/2015/wechat-yao/" data-id="cijbm5x8i000blipyyvaioks6" class="article-share-link">Share</a>
       
       
     </footer>
@@ -320,7 +332,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2015/10/29/2015/python-java-aes/" data-id="ciht8d1co000flvpypv3mcu35" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2015/10/29/2015/python-java-aes/" data-id="cijbm5x8q000hlipyonfdysie" class="article-share-link">Share</a>
       
       
     </footer>
@@ -361,7 +373,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2015/10/29/2015/-ffmpeg-mp4-/" data-id="ciht8d1bs0000lvpyl9qz9ojr" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2015/10/29/2015/-ffmpeg-mp4-/" data-id="cijbm5x7u0000lipy0ptl4g8n" class="article-share-link">Share</a>
       
       
     </footer>
@@ -416,7 +428,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2015/10/27/2015/nginx-lua-redis/" data-id="ciht8d1cq000hlvpyaftphyhh" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2015/10/27/2015/nginx-lua-redis/" data-id="cijbm5x8t000jlipyirt0zjln" class="article-share-link">Share</a>
       
       
     </footer>
@@ -459,7 +471,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2015/10/22/2015/zaji/" data-id="ciht8d1cg0006lvpyrr5b0u2h" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2015/10/22/2015/zaji/" data-id="cijbm5x8g0008lipyyfgb8rhd" class="article-share-link">Share</a>
       
       
     </footer>
@@ -551,7 +563,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2015/10/21/2015/react-native-for-android--/" data-id="ciht8d1cm000dlvpyd4eb05rm" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2015/10/21/2015/react-native-for-android--/" data-id="cijbm5x8n000flipyspipdvts" class="article-share-link">Share</a>
       
       
     </footer>
@@ -604,7 +616,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2015/10/18/2015/mongodbpython/" data-id="ciht8d1ct000jlvpyiaq3600l" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2015/10/18/2015/mongodbpython/" data-id="cijbm5x8w000llipywkflzsp1" class="article-share-link">Share</a>
       
       
     </footer>
@@ -640,7 +652,7 @@ var _hmt = _hmt || [];
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">8</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">8</span></li></ul>
     </div>
   </div>
 
@@ -652,6 +664,10 @@ var _hmt = _hmt || [];
       <ul>
         
           <li>
+            <a href="/2016/01/12/2016/flask-bugs/">Flask入坑指南</a>
+          </li>
+        
+          <li>
             <a href="/2015/12/04/2015/hexo-github-blog/">hexo+github page搭建博客</a>
           </li>
         
@@ -661,10 +677,6 @@ var _hmt = _hmt || [];
         
           <li>
             <a href="/2015/12/03/2015/wechat-yao/">微信公众号摇一摇开发</a>
-          </li>
-        
-          <li>
-            <a href="/2015/11/01/2015/cygwin-zsh/">cygwin 安装 zsh</a>
           </li>
         
           <li>
@@ -683,7 +695,7 @@ var _hmt = _hmt || [];
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2015 bcllemon<br>
+      &copy; 2016 bcllemon<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>

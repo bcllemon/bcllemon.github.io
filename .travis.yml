@@ -14,7 +14,7 @@ deploy:
   github-token: $GH_TOKEN
   keep-history: true
   committer_from_gh: true
-  target_branch: master  # 部署到 master 分支
+  target_branch: test  # 部署到 master 分支
   on:
     branch: blog-source
   local-dir: public

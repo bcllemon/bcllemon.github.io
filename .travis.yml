@@ -1,0 +1,20 @@
+sudo: false
+language: node_js
+node_js:
+  - 10 # use nodejs v10 LTS
+cache: npm
+branches:
+  only:
+    - blog-source # 仅从 blog-source 分支构建
+script:
+  - hexo generate # 通过 hexo generate 生成静态文件 static files
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GH_TOKEN
+  keep-history: true
+  committer_from_gh: true
+  target_branch: master  # 部署到 master 分支
+  on:
+    branch: blog-source
+  local-dir: public

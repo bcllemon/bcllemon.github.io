@@ -10,14 +10,14 @@ script:
   - hexo generate # 通过 hexo generate 生成静态文件 static files
 deploy:
   provider: pages
-  skip-cleanup: true
+  skip_cleanup: true
   api_key:
     secure: $GITHUB_TOKEN
   github-token: $GITHUB_TOKEN
   github_token: $GITHUB_TOKEN
   keep-history: true
   committer_from_gh: true
-  target_branch: test  # 部署到 master 分支
+  target_branch: master  # 部署到 master 分支
   on:
     branch: blog-source
   local-dir: public

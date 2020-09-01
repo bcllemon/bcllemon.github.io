@@ -1,26 +1,21 @@
 <!DOCTYPE html>
 <html>
-<head>
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
   <title>iOS的DeviceToken随生产环境和开发环境变化 | 溺水的游鱼</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="当我用XCode直接运行到手机上的时候，Device token是以3开头的，而当我打包上传到fir.im，再下载安装的时候，Device token就变成以5开头了
-其实这是生产环境和开发环境的问题，在这两个环境下Device token是不同的
-如果你手机中的App是通过XCode直接安装的话，那么你的App就属于开发环境，想要推送成功就需要创建开发环境的证书；如果你的App是打包成ipa文件">
+  <meta name="description" content="当我用XCode直接运行到手机上的时候，Device token是以3开头的，而当我打包上传到fir.im，再下载安装的时候，Device token就变成以5开头了 其实这是生产环境和开发环境的问题，在这两个环境下Device token是不同的 如果你手机中的App是通过XCode直接安装的话，那么你的App就属于开发环境，想要推送成功就需要创建开发环境的证书；如果你的App是打包成ipa文件">
 <meta property="og:type" content="article">
 <meta property="og:title" content="iOS的DeviceToken随生产环境和开发环境变化">
 <meta property="og:url" content="http://bcllemon.github.io/2015/10/16/2015/iosdevicetoken/index.html">
 <meta property="og:site_name" content="溺水的游鱼">
-<meta property="og:description" content="当我用XCode直接运行到手机上的时候，Device token是以3开头的，而当我打包上传到fir.im，再下载安装的时候，Device token就变成以5开头了
-其实这是生产环境和开发环境的问题，在这两个环境下Device token是不同的
-如果你手机中的App是通过XCode直接安装的话，那么你的App就属于开发环境，想要推送成功就需要创建开发环境的证书；如果你的App是打包成ipa文件">
-<meta property="og:updated_time" content="2015-10-18T01:46:50.000Z">
+<meta property="og:description" content="当我用XCode直接运行到手机上的时候，Device token是以3开头的，而当我打包上传到fir.im，再下载安装的时候，Device token就变成以5开头了 其实这是生产环境和开发环境的问题，在这两个环境下Device token是不同的 如果你手机中的App是通过XCode直接安装的话，那么你的App就属于开发环境，想要推送成功就需要创建开发环境的证书；如果你的App是打包成ipa文件">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-09-01T09:05:52.477Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS的DeviceToken随生产环境和开发环境变化">
-<meta name="twitter:description" content="当我用XCode直接运行到手机上的时候，Device token是以3开头的，而当我打包上传到fir.im，再下载安装的时候，Device token就变成以5开头了
-其实这是生产环境和开发环境的问题，在这两个环境下Device token是不同的
-如果你手机中的App是通过XCode直接安装的话，那么你的App就属于开发环境，想要推送成功就需要创建开发环境的证书；如果你的App是打包成ipa文件">
+<meta name="twitter:description" content="当我用XCode直接运行到手机上的时候，Device token是以3开头的，而当我打包上传到fir.im，再下载安装的时候，Device token就变成以5开头了 其实这是生产环境和开发环境的问题，在这两个环境下Device token是不同的 如果你手机中的App是通过XCode直接安装的话，那么你的App就属于开发环境，想要推送成功就需要创建开发环境的证书；如果你的App是打包成ipa文件">
   
     <link rel="alternative" href="/atom.xml" title="溺水的游鱼" type="application/atom+xml">
   
@@ -28,7 +23,7 @@
     <link rel="icon" href="/favicon.png">
   
   <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
   <script>
 var _hmt = _hmt || [];
 (function() {
@@ -40,7 +35,7 @@ var _hmt = _hmt || [];
 </script>
 
 </head>
-
+</html>
 <body>
   <div id="container">
     <div id="wrap">
@@ -69,7 +64,7 @@ var _hmt = _hmt || [];
         <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://bcllemon.github.io"></form>
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://bcllemon.github.io"></form>
       </div>
     </div>
   </div>
@@ -78,7 +73,7 @@ var _hmt = _hmt || [];
         <section id="main"><article id="post-2015/iosdevicetoken" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2015/10/16/2015/iosdevicetoken/" class="article-date">
-  <time datetime="2015-10-16T09:44:00.000Z" itemprop="datePublished">2015-10-16</time>
+  <time datetime="2015-10-16T17:44:00.000Z" itemprop="datePublished">2015-10-16</time>
 </a>
     
   <div class="article-category">
@@ -145,7 +140,7 @@ var _hmt = _hmt || [];
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">10</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂记/">杂记</a><span class="category-list-count">1</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">10</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂记/">杂记</a><span class="category-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -158,7 +153,7 @@ var _hmt = _hmt || [];
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">8</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">8</span></li></ul>
     </div>
   </div>
 
@@ -168,6 +163,10 @@ var _hmt = _hmt || [];
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2020/09/01/2020/hello-world/"> Hello World</a>
+          </li>
         
           <li>
             <a href="/2016/01/12/2016/flask-bugs/">Flask入坑指南</a>
@@ -185,10 +184,6 @@ var _hmt = _hmt || [];
             <a href="/2015/12/03/2015/wechat-yao/">微信公众号摇一摇开发</a>
           </li>
         
-          <li>
-            <a href="/2015/10/29/2015/python-java-aes/">Python Java AES</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -201,7 +196,7 @@ var _hmt = _hmt || [];
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2016 bcllemon<br>
+      &copy; 2020 bcllemon<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
@@ -220,11 +215,11 @@ var _hmt = _hmt || [];
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
 
 
-<script src="/js/script.js" type="text/javascript"></script>
+<script src="/js/script.js"></script>
 
   </div>
 </body>

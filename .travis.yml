@@ -11,7 +11,7 @@ script:
 deploy:
   provider: pages
   skip-cleanup: true
-  github-token: 585b75a129753c67743541af5d950ea909ea5cfa
+  github-token: b1921cff4c5aeda087fff209db5e8bd70679963d
   keep-history: true
   committer_from_gh: true
   target_branch: test  # 部署到 master 分支

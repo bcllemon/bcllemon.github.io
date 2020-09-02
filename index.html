@@ -68,6 +68,62 @@ var _hmt = _hmt || [];
       <div class="outer">
         <section id="main">
   
+    <article id="post-2020/minikube" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/09/02/2020/minikube/" class="article-date">
+  <time datetime="2020-09-02T00:00:00.000Z" itemprop="datePublished">2020-09-02</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/09/02/2020/minikube/">Macbook Minikube 配置</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Macbook-Minikube-配置"><a href="#Macbook-Minikube-配置" class="headerlink" title="Macbook Minikube 配置"></a>Macbook Minikube 配置</h1><h2 id="安装-kubectl"><a href="#安装-kubectl" class="headerlink" title="安装 kubectl"></a>安装 kubectl</h2><p><code>brew install kubernetes-cli</code></p>
+<h2 id="安装-Hypervisor"><a href="#安装-Hypervisor" class="headerlink" title="安装 Hypervisor"></a>安装 Hypervisor</h2><p><code>brew install hyperkit</code></p>
+<h2 id="安装-Minikube"><a href="#安装-Minikube" class="headerlink" title="安装 Minikube"></a>安装 Minikube</h2><p><code>brew install minikube</code></p>
+<h2 id="启动-Minikube"><a href="#启动-Minikube" class="headerlink" title="启动 Minikube"></a>启动 Minikube</h2><p><code>minikube start --vm-driver=hyperkit --image-repository=registry.cn-hangzhou.aliyuncs.com/google_containers</code></p>
+<h2 id="检查集群的状态"><a href="#检查集群的状态" class="headerlink" title="检查集群的状态"></a>检查集群的状态</h2><p><code>minikube status</code><br><figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">minikube</span><br><span class="line"><span class="symbol">type:</span> Control Plane</span><br><span class="line"><span class="symbol">host:</span> Running</span><br><span class="line"><span class="symbol">kubelet:</span> Running</span><br><span class="line"><span class="symbol">apiserver:</span> Running</span><br><span class="line"><span class="symbol">kubeconfig:</span> Configured</span><br></pre></td></tr></table></figure></p>
+<h2 id="查看-Minikube-ip"><a href="#查看-Minikube-ip" class="headerlink" title="查看 Minikube ip"></a>查看 Minikube ip</h2><p><code>minikube ip</code></p>
+<h2 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h2><p><code>export no_proxy=&quot;127.0.0.1,{minikube ip}&quot;</code></p>
+<h2 id="测试部署"><a href="#测试部署" class="headerlink" title="测试部署"></a>测试部署</h2><p><code>kubectl create deployment hello-minikube --image=registry.cn-hangzhou.aliyuncs.com/google_containers/echoserver:1.10</code></p>
+<h1 id="将部署暴露为服务"><a href="#将部署暴露为服务" class="headerlink" title="将部署暴露为服务"></a>将部署暴露为服务</h1><p><code>kubectl expose deployment hello-minikube --type=NodePort --port=8080</code></p>
+<h1 id="查看服务"><a href="#查看服务" class="headerlink" title="查看服务"></a>查看服务</h1><p><code>kubectl get pod</code></p>
+<h1 id="获取服务URL"><a href="#获取服务URL" class="headerlink" title="获取服务URL"></a>获取服务URL</h1><p><code>minikube service hello-minikube --url</code></p>
+<h1 id="查看仪表盘"><a href="#查看仪表盘" class="headerlink" title="查看仪表盘"></a>查看仪表盘</h1><p><code>minikube dashboard</code></p>
+<h1 id="删除服务"><a href="#删除服务" class="headerlink" title="删除服务"></a>删除服务</h1><p><code>kubectl delete services hello-minikube</code></p>
+<h1 id="删除部署"><a href="#删除部署" class="headerlink" title="删除部署"></a>删除部署</h1><p><code>kubectl delete deployment hello-minikube</code></p>
+<h1 id="停止Minikube集群"><a href="#停止Minikube集群" class="headerlink" title="停止Minikube集群"></a>停止Minikube集群</h1><p><code>minikube stop</code></p>
+<h1 id="删除Minikube集群"><a href="#删除Minikube集群" class="headerlink" title="删除Minikube集群"></a>删除Minikube集群</h1><p><code>minikube delete</code></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://bcllemon.github.io/2020/09/02/2020/minikube/" data-id="ckel36by30001y2rke7fpqi3v" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-2020/hello-world" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/09/01/2020/hello-world/" class="article-date">
@@ -107,7 +163,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/01/2020/hello-world/" data-id="ckejqh1rb0000z7ru4a0rjrgj" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/01/2020/hello-world/" data-id="ckel36by20000y2rku54v48gb" class="article-share-link">Share</a>
       
       
     </footer>
@@ -532,98 +588,6 @@ var _hmt = _hmt || [];
 
 
   
-    <article id="post-2015/react-native-for-android--" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/10/21/2015/react-native-for-android--/" class="article-date">
-  <time datetime="2015-10-21T17:31:00.000Z" itemprop="datePublished">2015-10-21</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/技术/">技术</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/21/2015/react-native-for-android--/">React Native for Android 环境搭建-坑</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><ul>
-<li>操作系统：OSX</li>
-</ul>
-<h1 id="基本环境"><a href="#基本环境" class="headerlink" title="基本环境"></a>基本环境</h1><h2 id="Homebrew"><a href="#Homebrew" class="headerlink" title="Homebrew"></a>Homebrew</h2><h3 id="新安装"><a href="#新安装" class="headerlink" title="新安装"></a>新安装</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/<span class="keyword">install</span>/<span class="keyword">master</span>/<span class="keyword">install</span>)<span class="string">"</span></span><br></pre></td></tr></table></figure>
-<h3 id="已安装-务必更新"><a href="#已安装-务必更新" class="headerlink" title="已安装-务必更新"></a>已安装-<font color="red">务必更新</font></h3><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/loacl</span><br><span class="line">git fetch origin</span><br><span class="line">git reset --hard origin/<span class="literal">master</span></span><br><span class="line">brew update</span><br></pre></td></tr></table></figure>
-<h2 id="Nodejs"><a href="#Nodejs" class="headerlink" title="Nodejs"></a>Nodejs</h2><h3 id="安装-nvm"><a href="#安装-nvm" class="headerlink" title="安装 nvm"></a>安装 nvm</h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">brew install curl  <span class="comment"># 确保安装了 curl</span></span><br><span class="line">curl -o- https:<span class="regexp">//</span>raw.githubusercontent.com<span class="regexp">/creationix/</span>nvm<span class="regexp">/v0.29.0/i</span>nstall.sh | bash</span><br></pre></td></tr></table></figure>
-<h3 id="安装-Nodejs"><a href="#安装-Nodejs" class="headerlink" title="安装 Nodejs"></a>安装 Nodejs</h3><p>此处需要安装4.0以上版本<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvm install node &amp;&amp; nvm alias<span class="built_in"> default </span>node</span><br></pre></td></tr></table></figure></p>
-<h3 id="NPM-国内源"><a href="#NPM-国内源" class="headerlink" title="NPM 国内源"></a>NPM 国内源</h3><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="built_in">config</span> <span class="built_in">set</span> registry https:<span class="comment">//registry.npm.taobao.org</span></span><br><span class="line">npm <span class="built_in">config</span> <span class="built_in">set</span> disturl https:<span class="comment">//npm.taobao.org/dist</span></span><br></pre></td></tr></table></figure>
-<h2 id="watchman"><a href="#watchman" class="headerlink" title="watchman"></a>watchman</h2><p><a href="https://facebook.github.io/watchman/docs/install.html" target="_blank" rel="noopener">watchman</a> 是 Facebook 的一个用于监控文件变更并触发指定操作的工具：<br><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">brew </span><span class="keyword">install </span>watchman</span><br></pre></td></tr></table></figure></p>
-<h2 id="flow"><a href="#flow" class="headerlink" title="flow"></a>flow</h2><p><a href="http://flowtype.org/" target="_blank" rel="noopener">Flow</a> 是一个 JavaScript 的静态类型检查器，建议安装它，以方便找出代码中可能存在的类型错误：</p>
-<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">brew </span><span class="keyword">install </span>flow</span><br></pre></td></tr></table></figure>
-<h2 id="Android-SDK"><a href="#Android-SDK" class="headerlink" title="Android SDK"></a>Android SDK</h2><h3 id="SDK"><a href="#SDK" class="headerlink" title="SDK:"></a>SDK:</h3><ul>
-<li>Android SDK Tools</li>
-<li>Android SDK Platform-tools</li>
-<li>Android SDK Build-tools</li>
-<li>Android SDK Platform</li>
-<li>Android Support Repository<h3 id="模拟器"><a href="#模拟器" class="headerlink" title="模拟器"></a>模拟器</h3></li>
-<li>API 19以上<h3 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h3></li>
-<li>ANDROID_SDK</li>
-<li>ANDROID_NDK</li>
-</ul>
-<p>详细介绍可以参考 <a href="http://wiki.jikexueyuan.com/project/react-native/DevelopmentSetupAndroid.html" target="_blank" rel="noopener">这篇文章</a> 。</p>
-<h2 id="React-Native"><a href="#React-Native" class="headerlink" title="React Native"></a>React Native</h2><figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">npm</span> install -g react-<span class="keyword">native</span>-cli</span><br></pre></td></tr></table></figure>
-<h1 id="使用步骤"><a href="#使用步骤" class="headerlink" title="使用步骤"></a>使用步骤</h1><h2 id="新建工程"><a href="#新建工程" class="headerlink" title="新建工程"></a>新建工程</h2><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">react-<span class="keyword">native</span> <span class="keyword">init</span> demoProject</span><br></pre></td></tr></table></figure>
-<h2 id="运行工程"><a href="#运行工程" class="headerlink" title="运行工程"></a>运行工程</h2><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">react-native <span class="keyword">run</span><span class="bash">-android</span></span><br></pre></td></tr></table></figure>
-<h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><h3 id="启动速度慢"><a href="#启动速度慢" class="headerlink" title="启动速度慢"></a>启动速度慢</h3><p>Android App使用 gradle 打包，在第一次启动时，会下载 gradle 和相应的依赖包，所以会造成启动速度缓慢。可以自行修改 app 中 /android/gradle.properties的配置，使用本地已经配置好的环境优化启动速度。</p>
-<h3 id="端口占用"><a href="#端口占用" class="headerlink" title="端口占用"></a>端口占用</h3><p>如果 Running Packager 提示 “Packager can’t listen on port 8081” ，说明 8081 端口被占用，可以检查是什么程序占用了这个端口并杀掉它：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo lsof -n -i4TCP:8081 | grep LISTEN</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">kill</span> -9 &lt;进程id&gt;</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="加载失败"><a href="#加载失败" class="headerlink" title="加载失败"></a>加载失败</h3><p><img src="http://7xnhcl.com1.z0.glb.clouddn.com/post-react-android-1.png" alt="加载失败"><br>你还需要进行如下设置：</p>
-<ul>
-<li>更新 brew 和 watchman ：brew update &amp;&amp; brew upgrade watchman；参考 brew 安装中的说明</li>
-<li>按下菜单按钮呼出菜单<br><img src="http://7xnhcl.com1.z0.glb.clouddn.com/post-react-android-2.png" alt="菜单"><br>然后点击【Dev Settings】菜单项进入应用的选项界面，再点击【Debug server host for device】选项，填入你的Mac主机的 ip，然后重启 APP ；<br><img src="http://7xnhcl.com1.z0.glb.clouddn.com/post-react-android-3.png" alt="Debug server host for device"><br>其他选项，按需勾选。<br>Auto reload on JS Change - 自动刷新界面</li>
-</ul>
-<h1 id="Example-App"><a href="#Example-App" class="headerlink" title="Example App"></a>Example App</h1><h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="keyword">clone</span> <span class="title">https</span>://github.com/facebook/react-native.git</span><br><span class="line">git checkout <span class="number">0.13</span>-stable</span><br></pre></td></tr></table></figure>
-<p><font color="red">注意选择稳定分支，不要使用 master 分支</font></p>
-<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><p>Exmaple App 中，Movies 和 UIExplorer 两个是 IOS 和 Android 都可以的，剩下俩个都是只有 IOS 版本的。这两个 APP 和上面说的通过 <code>react-native init</code>方式创建的不同，需要使用不同的方式来启动。<br><a href="https://github.com/facebook/react-native/tree/master/ReactAndroid#prerequisites" target="_blank" rel="noopener">详情</a></p>
-<h3 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h3><ul>
-<li><p>react-native依赖</p>
-<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd react-<span class="keyword">native</span></span><br><span class="line"><span class="built_in">npm</span> install</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Android<br>需要 SDK、Build-tools、NDK、Emulator</p>
-</li>
-</ul>
-<h3 id="编译基础"><a href="#编译基础" class="headerlink" title="编译基础"></a>编译基础</h3><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd react-native</span><br><span class="line">./gradlew <span class="symbol">:ReactAndroid</span><span class="symbol">:assembleDebug</span></span><br></pre></td></tr></table></figure>
-<h3 id="编译运行"><a href="#编译运行" class="headerlink" title="编译运行"></a>编译运行</h3><p>编译过程中需要下载依赖包，所以要耐心等待。</p>
-<ul>
-<li><p>UIExplorer</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd react-native</span><br><span class="line">./<span class="string">gradlew :</span><span class="string">Examples:</span><span class="string">UIExplorer:</span><span class="string">android:</span><span class="string">app:</span>installDebug</span><br><span class="line">.<span class="regexp">/package./</span>packager/packager.sh</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Movies</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd react-native</span><br><span class="line">./<span class="string">gradlew :</span><span class="string">Examples:</span><span class="string">Movies:</span><span class="string">android:</span><span class="string">app:</span>installDebug</span><br><span class="line">.<span class="regexp">/package./</span>packager/packager.sh</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2015/10/21/2015/react-native-for-android--/" data-id="cijbm5x8n000flipyspipdvts" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -637,7 +601,7 @@ var _hmt = _hmt || [];
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">10</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂记/">杂记</a><span class="category-list-count">2</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">11</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂记/">杂记</a><span class="category-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -650,7 +614,7 @@ var _hmt = _hmt || [];
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">8</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">8</span></li></ul>
     </div>
   </div>
 
@@ -660,6 +624,10 @@ var _hmt = _hmt || [];
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2020/09/02/2020/minikube/">Macbook Minikube 配置</a>
+          </li>
         
           <li>
             <a href="/2020/09/01/2020/hello-world/"> Hello World</a>
@@ -675,10 +643,6 @@ var _hmt = _hmt || [];
         
           <li>
             <a href="/2015/12/04/2015/spring-dynamic-datasource/">spring动态数据源</a>
-          </li>
-        
-          <li>
-            <a href="/2015/12/03/2015/wechat-yao/">微信公众号摇一摇开发</a>
           </li>
         
       </ul>

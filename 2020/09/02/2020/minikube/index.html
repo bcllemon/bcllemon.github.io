@@ -3,19 +3,19 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
-  <title>iOS的DeviceToken随生产环境和开发环境变化 | 溺水的游鱼</title>
+  <title>Macbook Minikube 配置 | 溺水的游鱼</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="当我用XCode直接运行到手机上的时候，Device token是以3开头的，而当我打包上传到fir.im，再下载安装的时候，Device token就变成以5开头了 其实这是生产环境和开发环境的问题，在这两个环境下Device token是不同的 如果你手机中的App是通过XCode直接安装的话，那么你的App就属于开发环境，想要推送成功就需要创建开发环境的证书；如果你的App是打包成ipa文件">
+  <meta name="description" content="Macbook Minikube 配置安装 kubectlbrew install kubernetes-cli 安装 Hypervisorbrew install hyperkit 安装 Minikubebrew install minikube 启动 Minikubeminikube start --vm-driver=hyperkit --image-repository=registry.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="iOS的DeviceToken随生产环境和开发环境变化">
-<meta property="og:url" content="http://bcllemon.github.io/2015/10/16/2015/iosdevicetoken/index.html">
+<meta property="og:title" content="Macbook Minikube 配置">
+<meta property="og:url" content="http://bcllemon.github.io/2020/09/02/2020/minikube/index.html">
 <meta property="og:site_name" content="溺水的游鱼">
-<meta property="og:description" content="当我用XCode直接运行到手机上的时候，Device token是以3开头的，而当我打包上传到fir.im，再下载安装的时候，Device token就变成以5开头了 其实这是生产环境和开发环境的问题，在这两个环境下Device token是不同的 如果你手机中的App是通过XCode直接安装的话，那么你的App就属于开发环境，想要推送成功就需要创建开发环境的证书；如果你的App是打包成ipa文件">
+<meta property="og:description" content="Macbook Minikube 配置安装 kubectlbrew install kubernetes-cli 安装 Hypervisorbrew install hyperkit 安装 Minikubebrew install minikube 启动 Minikubeminikube start --vm-driver=hyperkit --image-repository=registry.">
 <meta property="og:locale" content="default">
 <meta property="og:updated_time" content="2020-09-02T07:55:46.328Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="iOS的DeviceToken随生产环境和开发环境变化">
-<meta name="twitter:description" content="当我用XCode直接运行到手机上的时候，Device token是以3开头的，而当我打包上传到fir.im，再下载安装的时候，Device token就变成以5开头了 其实这是生产环境和开发环境的问题，在这两个环境下Device token是不同的 如果你手机中的App是通过XCode直接安装的话，那么你的App就属于开发环境，想要推送成功就需要创建开发环境的证书；如果你的App是打包成ipa文件">
+<meta name="twitter:title" content="Macbook Minikube 配置">
+<meta name="twitter:description" content="Macbook Minikube 配置安装 kubectlbrew install kubernetes-cli 安装 Hypervisorbrew install hyperkit 安装 Minikubebrew install minikube 启动 Minikubeminikube start --vm-driver=hyperkit --image-repository=registry.">
   
     <link rel="alternative" href="/atom.xml" title="溺水的游鱼" type="application/atom+xml">
   
@@ -70,10 +70,10 @@ var _hmt = _hmt || [];
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-2015/iosdevicetoken" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-2020/minikube" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2015/10/16/2015/iosdevicetoken/" class="article-date">
-  <time datetime="2015-10-16T17:44:00.000Z" itemprop="datePublished">2015-10-16</time>
+    <a href="/2020/09/02/2020/minikube/" class="article-date">
+  <time datetime="2020-09-02T00:00:00.000Z" itemprop="datePublished">2020-09-02</time>
 </a>
     
   <div class="article-category">
@@ -88,7 +88,7 @@ var _hmt = _hmt || [];
         
   
     <h1 class="article-title" itemprop="name">
-      iOS的DeviceToken随生产环境和开发环境变化
+      Macbook Minikube 配置
     </h1>
   
 
@@ -96,14 +96,27 @@ var _hmt = _hmt || [];
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>当我用XCode直接运行到手机上的时候，Device token是以3开头的，而当我打包上传到fir.im，再下载安装的时候，Device token就变成以5开头了</p>
-<p>其实这是生产环境和开发环境的问题，在这两个环境下Device token是不同的</p>
-<p>如果你手机中的App是通过XCode直接安装的话，那么你的App就属于开发环境，想要推送成功就需要创建开发环境的证书；<br>如果你的App是打包成ipa文件安装的（<font color="red">不管是正式上线还是自己测试</font>），那么就是生产环境，需要创建生产环境证书，这两个环境的Device token是不同的</p>
+        <h1 id="Macbook-Minikube-配置"><a href="#Macbook-Minikube-配置" class="headerlink" title="Macbook Minikube 配置"></a>Macbook Minikube 配置</h1><h2 id="安装-kubectl"><a href="#安装-kubectl" class="headerlink" title="安装 kubectl"></a>安装 kubectl</h2><p><code>brew install kubernetes-cli</code></p>
+<h2 id="安装-Hypervisor"><a href="#安装-Hypervisor" class="headerlink" title="安装 Hypervisor"></a>安装 Hypervisor</h2><p><code>brew install hyperkit</code></p>
+<h2 id="安装-Minikube"><a href="#安装-Minikube" class="headerlink" title="安装 Minikube"></a>安装 Minikube</h2><p><code>brew install minikube</code></p>
+<h2 id="启动-Minikube"><a href="#启动-Minikube" class="headerlink" title="启动 Minikube"></a>启动 Minikube</h2><p><code>minikube start --vm-driver=hyperkit --image-repository=registry.cn-hangzhou.aliyuncs.com/google_containers</code></p>
+<h2 id="检查集群的状态"><a href="#检查集群的状态" class="headerlink" title="检查集群的状态"></a>检查集群的状态</h2><p><code>minikube status</code><br><figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">minikube</span><br><span class="line"><span class="symbol">type:</span> Control Plane</span><br><span class="line"><span class="symbol">host:</span> Running</span><br><span class="line"><span class="symbol">kubelet:</span> Running</span><br><span class="line"><span class="symbol">apiserver:</span> Running</span><br><span class="line"><span class="symbol">kubeconfig:</span> Configured</span><br></pre></td></tr></table></figure></p>
+<h2 id="查看-Minikube-ip"><a href="#查看-Minikube-ip" class="headerlink" title="查看 Minikube ip"></a>查看 Minikube ip</h2><p><code>minikube ip</code></p>
+<h2 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h2><p><code>export no_proxy=&quot;127.0.0.1,{minikube ip}&quot;</code></p>
+<h2 id="测试部署"><a href="#测试部署" class="headerlink" title="测试部署"></a>测试部署</h2><p><code>kubectl create deployment hello-minikube --image=registry.cn-hangzhou.aliyuncs.com/google_containers/echoserver:1.10</code></p>
+<h1 id="将部署暴露为服务"><a href="#将部署暴露为服务" class="headerlink" title="将部署暴露为服务"></a>将部署暴露为服务</h1><p><code>kubectl expose deployment hello-minikube --type=NodePort --port=8080</code></p>
+<h1 id="查看服务"><a href="#查看服务" class="headerlink" title="查看服务"></a>查看服务</h1><p><code>kubectl get pod</code></p>
+<h1 id="获取服务URL"><a href="#获取服务URL" class="headerlink" title="获取服务URL"></a>获取服务URL</h1><p><code>minikube service hello-minikube --url</code></p>
+<h1 id="查看仪表盘"><a href="#查看仪表盘" class="headerlink" title="查看仪表盘"></a>查看仪表盘</h1><p><code>minikube dashboard</code></p>
+<h1 id="删除服务"><a href="#删除服务" class="headerlink" title="删除服务"></a>删除服务</h1><p><code>kubectl delete services hello-minikube</code></p>
+<h1 id="删除部署"><a href="#删除部署" class="headerlink" title="删除部署"></a>删除部署</h1><p><code>kubectl delete deployment hello-minikube</code></p>
+<h1 id="停止Minikube集群"><a href="#停止Minikube集群" class="headerlink" title="停止Minikube集群"></a>停止Minikube集群</h1><p><code>minikube stop</code></p>
+<h1 id="删除Minikube集群"><a href="#删除Minikube集群" class="headerlink" title="删除Minikube集群"></a>删除Minikube集群</h1><p><code>minikube delete</code></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2015/10/16/2015/iosdevicetoken/" data-id="cijbm5x95000nlipymcq8dg2m" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/02/2020/minikube/" data-id="ckel36by30001y2rke7fpqi3v" class="article-share-link">Share</a>
       
       
     </footer>
@@ -112,19 +125,10 @@ var _hmt = _hmt || [];
     
 <nav id="article-nav">
   
-    <a href="/2015/10/18/2015/mongodbpython/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          Mongodb和Python进行数据统计
-        
-      </div>
-    </a>
   
-  
-    <a href="/2015/10/13/https/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2020/09/01/2020/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Nginx+Tomcat 配置 https</div>
+      <div class="article-nav-title"> Hello World</div>
     </a>
   
 </nav>

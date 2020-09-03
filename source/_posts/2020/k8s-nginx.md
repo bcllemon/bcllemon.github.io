@@ -3,7 +3,7 @@ title: "K8s 配置 Nginx"
 date: "2020-09-02 00:00"
 categories: 技术
 ---
-# K8s 配置 Nginx
+# deployment 文件
 ```
 apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
 kind: Deployment

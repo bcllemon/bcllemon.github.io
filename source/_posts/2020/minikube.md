@@ -3,7 +3,7 @@ title: "Macbook Minikube 配置"
 date: "2020-09-02 00:00"
 categories: 技术
 ---
-# Macbook Minikube 配置
+# 配置步骤
 ## 安装 kubectl
 ``brew install kubernetes-cli``
 ## 安装 Hypervisor

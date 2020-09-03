@@ -68,6 +68,47 @@ var _hmt = _hmt || [];
       <div class="outer">
         <section id="main">
   
+    <article id="post-2020/spring-amqp-ack" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/09/03/2020/spring-amqp-ack/" class="article-date">
+  <time datetime="2020-09-03T15:07:00.000Z" itemprop="datePublished">2020-09-03</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/09/03/2020/spring-amqp-ack/">Spring Amqp Ack</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Ack-模式说明"><a href="#Ack-模式说明" class="headerlink" title="Ack 模式说明"></a>Ack 模式说明</h1><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * No acks - &#123;<span class="doctag">@code</span> autoAck=true&#125; in &#123;<span class="doctag">@code</span> Channel.basicConsume()&#125;.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">NONE,</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Manual acks - user must ack/nack via a channel aware listener.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">MANUAL,</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Auto - the container will issue the ack/nack based on whether</span></span><br><span class="line"><span class="comment"> * the listener returns normally, or throws an exception.</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;&lt;em&gt;Do not confuse with RabbitMQ &#123;<span class="doctag">@code</span> autoAck&#125; which is</span></span><br><span class="line"><span class="comment"> * represented by &#123;<span class="doctag">@link</span> #NONE&#125; here&lt;/em&gt;.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">AUTO;</span><br></pre></td></tr></table></figure>
+<h1 id="代码逻辑"><a href="#代码逻辑" class="headerlink" title="代码逻辑"></a>代码逻辑</h1><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">org.springframework.amqp.rabbit.listener.BlockingQueueConsumer#commitIfNecessary</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> boolean commitIfNecessary(boolean localTx) throws IOException &#123;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (<span class="keyword">this</span>.deliveryTags.isEmpty()) &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">/*</span></span><br><span class="line"><span class="comment">		 * If we have a TX Manager, but no TX, act like we are locally transacted.</span></span><br><span class="line"><span class="comment">		 */</span></span><br><span class="line">		boolean isLocallyTransacted = localTx</span><br><span class="line">				|| (<span class="keyword">this</span>.transactional</span><br><span class="line">				&amp;&amp; TransactionSynchronizationManager.getResource(<span class="keyword">this</span>.connectionFactory) == <span class="literal">null</span>);</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line"></span><br><span class="line">			boolean ackRequired = !<span class="keyword">this</span>.acknowledgeMode.isAutoAck() &amp;&amp; !<span class="keyword">this</span>.acknowledgeMode.isManual();</span><br><span class="line"></span><br><span class="line">			<span class="keyword">if</span> (ackRequired &amp;&amp; (!<span class="keyword">this</span>.transactional || isLocallyTransacted)) &#123;</span><br><span class="line">				long deliveryTag = new ArrayList&lt;<span class="built_in">Long</span>&gt;(<span class="keyword">this</span>.deliveryTags).<span class="keyword">get</span>(<span class="keyword">this</span>.deliveryTags.size() - <span class="number">1</span>);</span><br><span class="line">				<span class="keyword">this</span>.channel.basicAck(deliveryTag, <span class="literal">true</span>);</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="keyword">if</span> (isLocallyTransacted) &#123;</span><br><span class="line">				<span class="comment">// For manual acks we still need to commit</span></span><br><span class="line">				RabbitUtils.commitIfNecessary(<span class="keyword">this</span>.channel);</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">finally</span> &#123;</span><br><span class="line">			<span class="keyword">this</span>.deliveryTags.clear();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://bcllemon.github.io/2020/09/03/2020/spring-amqp-ack/" data-id="ckemh29pw000348q9pmgd8y6g" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-2020/minikube" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/09/02/2020/minikube/" class="article-date">
@@ -94,7 +135,7 @@ var _hmt = _hmt || [];
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="Macbook-Minikube-配置"><a href="#Macbook-Minikube-配置" class="headerlink" title="Macbook Minikube 配置"></a>Macbook Minikube 配置</h1><h2 id="安装-kubectl"><a href="#安装-kubectl" class="headerlink" title="安装 kubectl"></a>安装 kubectl</h2><p><code>brew install kubernetes-cli</code></p>
+        <h1 id="配置步骤"><a href="#配置步骤" class="headerlink" title="配置步骤"></a>配置步骤</h1><h2 id="安装-kubectl"><a href="#安装-kubectl" class="headerlink" title="安装 kubectl"></a>安装 kubectl</h2><p><code>brew install kubernetes-cli</code></p>
 <h2 id="安装-Hypervisor"><a href="#安装-Hypervisor" class="headerlink" title="安装 Hypervisor"></a>安装 Hypervisor</h2><p><code>brew install hyperkit</code></p>
 <h2 id="安装-Minikube"><a href="#安装-Minikube" class="headerlink" title="安装 Minikube"></a>安装 Minikube</h2><p><code>brew install minikube</code></p>
 <h2 id="启动-Minikube"><a href="#启动-Minikube" class="headerlink" title="启动 Minikube"></a>启动 Minikube</h2><p><code>minikube start --vm-driver=hyperkit --image-repository=registry.cn-hangzhou.aliyuncs.com/google_containers</code></p>
@@ -114,7 +155,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/02/2020/minikube/" data-id="ckel3glqo0002zfoon2mrerdl" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/02/2020/minikube/" data-id="ckemh29pv000248q9mc3jklil" class="article-share-link">Share</a>
       
       
     </footer>
@@ -150,12 +191,12 @@ var _hmt = _hmt || [];
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="K8s-配置-Nginx"><a href="#K8s-配置-Nginx" class="headerlink" title="K8s 配置 Nginx"></a>K8s 配置 Nginx</h1><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span> <span class="comment"># for versions before 1.9.0 use apps/v1beta2</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nginx-deployment</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">  <span class="attr">replicas:</span> <span class="number">1</span> <span class="comment"># tells deployment to run 2 pods matching the template</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">shareProcessNamespace:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">          <span class="attr">image:</span> <span class="string">nginx:1.8</span></span><br><span class="line">          <span class="attr">ports:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">80</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nginx-service</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">  <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">      <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">      <span class="attr">targetPort:</span> <span class="number">80</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">NodePort</span></span><br></pre></td></tr></table></figure>
+        <h1 id="deployment-文件"><a href="#deployment-文件" class="headerlink" title="deployment 文件"></a>deployment 文件</h1><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span> <span class="comment"># for versions before 1.9.0 use apps/v1beta2</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nginx-deployment</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">  <span class="attr">replicas:</span> <span class="number">1</span> <span class="comment"># tells deployment to run 2 pods matching the template</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">shareProcessNamespace:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">          <span class="attr">image:</span> <span class="string">nginx:1.8</span></span><br><span class="line">          <span class="attr">ports:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">80</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nginx-service</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">  <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">      <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">      <span class="attr">targetPort:</span> <span class="number">80</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">NodePort</span></span><br></pre></td></tr></table></figure>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/02/2020/k8s-nginx/" data-id="ckel3glqn0001zfoowlnyent4" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/02/2020/k8s-nginx/" data-id="ckemh29pu000148q94tzkd9eg" class="article-share-link">Share</a>
       
       
     </footer>
@@ -204,7 +245,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/01/2020/hello-world/" data-id="ckel3glqi0000zfooyxwjas5i" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/01/2020/hello-world/" data-id="ckemh29pp000048q9412cycfy" class="article-share-link">Share</a>
       
       
     </footer>
@@ -527,61 +568,6 @@ var _hmt = _hmt || [];
 
 
   
-    <article id="post-2015/nginx-lua-redis" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/10/27/2015/nginx-lua-redis/" class="article-date">
-  <time datetime="2015-10-27T17:49:00.000Z" itemprop="datePublished">2015-10-27</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/技术/">技术</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/27/2015/nginx-lua-redis/">nginx-lua-redis</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="Ubuntu下安装"><a href="#Ubuntu下安装" class="headerlink" title="Ubuntu下安装"></a>Ubuntu下安装</h1><h2 id="lua"><a href="#lua" class="headerlink" title="lua"></a>lua</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">apt-<span class="builtin-name">get</span> install lua5.1</span><br><span class="line">apt-<span class="builtin-name">get</span> install liblua5.1-dev</span><br><span class="line">apt-<span class="builtin-name">get</span> install liblua5.1-socket2</span><br></pre></td></tr></table></figure>
-<p>如果liblua5.1-socket2安装不上，需要添加源<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deb <span class="string">http:</span><span class="comment">//us.archive.ubuntu.com/ubuntu precise main universe</span></span><br></pre></td></tr></table></figure></p>
-<p>然后执行<br><figure class="highlight q"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-<span class="built_in">get</span> <span class="keyword">update</span></span><br></pre></td></tr></table></figure></p>
-<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><h3 id="lua-redis-parser"><a href="#lua-redis-parser" class="headerlink" title="lua-redis-parser"></a>lua-redis-parser</h3><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git clone http<span class="variable">s:</span>//github.<span class="keyword">com</span>/agentzh/<span class="keyword">lua</span>-redis-parser.git</span><br><span class="line">export LUA_INCLUDE_DIR=/usr/include/lua5.<span class="number">1</span></span><br><span class="line"><span class="keyword">cd</span> <span class="keyword">lua</span>-redis-parser</span><br><span class="line"><span class="keyword">make</span> CC=gcc</span><br><span class="line"><span class="keyword">make</span> install CC=gcc</span><br></pre></td></tr></table></figure>
-<h3 id="json"><a href="#json" class="headerlink" title="json"></a>json</h3><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget <span class="string">http:</span><span class="comment">//files.luaforge.net/releases/json/json/0.9.50/json4lua-0.9.50.zip</span></span><br><span class="line">unzip json4lua<span class="number">-0.9</span><span class="number">.50</span>.zip</span><br><span class="line">cp json4lua<span class="number">-0.9</span><span class="number">.50</span><span class="regexp">/json/</span>json.lua <span class="regexp">/usr/</span>share<span class="regexp">/lua/</span><span class="number">5.1</span>/</span><br></pre></td></tr></table></figure>
-<h3 id="redis-lua"><a href="#redis-lua" class="headerlink" title="redis-lua"></a>redis-lua</h3><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone http<span class="variable">s:</span>//github.<span class="keyword">com</span>/nrk/redis-<span class="keyword">lua</span>.git</span><br><span class="line"><span class="keyword">cp</span> redis-<span class="keyword">lua</span>/src/redis.<span class="keyword">lua</span> /usr/share/<span class="keyword">lua</span>/<span class="number">5.1</span>/</span><br></pre></td></tr></table></figure>
-<h2 id="nginx"><a href="#nginx" class="headerlink" title="nginx"></a>nginx</h2><h3 id="module"><a href="#module" class="headerlink" title="module"></a>module</h3><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git <span class="keyword">clone</span> <span class="title">https</span>://github.com/simpl/ngx_devel_kit.git</span><br><span class="line">git <span class="keyword">clone</span> <span class="title">https</span>://github.com/chaoslawful/lua-nginx-module.git</span><br><span class="line">git <span class="keyword">clone</span> <span class="title">https</span>://github.com/agentzh/redis2-nginx-module.git</span><br><span class="line">git <span class="keyword">clone</span> <span class="title">https</span>://github.com/agentzh/set-misc-nginx-module.git</span><br><span class="line">git <span class="keyword">clone</span> <span class="title">https</span>://github.com/agentzh/echo-nginx-module.git</span><br><span class="line">git <span class="keyword">clone</span> <span class="title">https</span>://github.com/catap/ngx_http_upstream_keepalive.git</span><br></pre></td></tr></table></figure>
-<h3 id="编译依赖"><a href="#编译依赖" class="headerlink" title="编译依赖"></a>编译依赖</h3><figure class="highlight q"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt-<span class="built_in">get</span> install libpcre3 libpcre3-<span class="built_in">dev</span> libltdl-<span class="built_in">dev</span> libssl-<span class="built_in">dev</span> libjpeg62 libjpeg62-<span class="built_in">dev</span> libpng12<span class="number">-0</span> libpng12-<span class="built_in">dev</span> libxml2-<span class="built_in">dev</span> libcurl4-openssl-<span class="built_in">dev</span> libmcrypt-<span class="built_in">dev</span> autoconf libxslt1-<span class="built_in">dev</span>  libgeoip-<span class="built_in">dev</span> libperl-<span class="built_in">dev</span> -y</span><br><span class="line">apt-<span class="built_in">get</span> install libgd2-noxpm-<span class="built_in">dev</span> -y</span><br></pre></td></tr></table></figure>
-<h3 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget http:<span class="comment">//nginx.org/download/nginx-1.8.0.tar.gz</span></span><br><span class="line">tar zxvf nginx-<span class="number">1.8</span>.<span class="number">0</span><span class="selector-class">.tar</span>.gz</span><br><span class="line">cd nginx-<span class="number">1.8</span>.<span class="number">0</span></span><br></pre></td></tr></table></figure>
-<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">./configure --prefix=/usr/local/nginx --<span class="keyword">with</span>-debug --<span class="keyword">with</span>-http_addition_module <span class="string">\</span></span><br><span class="line">--<span class="keyword">with</span>-http_dav_module --<span class="keyword">with</span>-http_flv_module --<span class="keyword">with</span>-http_geoip_module <span class="string">\</span></span><br><span class="line">--<span class="keyword">with</span>-http_gzip_static_module --<span class="keyword">with</span>-http_image_filter_module --<span class="keyword">with</span>-http_perl_module <span class="string">\</span></span><br><span class="line">--<span class="keyword">with</span>-http_random_index_module --<span class="keyword">with</span>-http_realip_module --<span class="keyword">with</span>-http_secure_link_module <span class="string">\</span></span><br><span class="line">--<span class="keyword">with</span>-http_stub_status_module --<span class="keyword">with</span>-http_ssl_module --<span class="keyword">with</span>-http_sub_module <span class="string">\</span></span><br><span class="line">--<span class="keyword">with</span>-http_xslt_module --<span class="keyword">with</span>-ipv6 --<span class="keyword">with</span>-sha1=/usr/include/openssl <span class="string">\</span></span><br><span class="line">--<span class="keyword">with</span>-md5=/usr/include/openssl --<span class="keyword">with</span>-mail --<span class="keyword">with</span>-mail_ssl_module <span class="string">\</span></span><br><span class="line">--add-<span class="built_in">module</span>=../ngx_devel_kit <span class="string">\</span></span><br><span class="line">--add-<span class="built_in">module</span>=../echo-nginx-<span class="built_in">module</span> <span class="string">\</span></span><br><span class="line">--add-<span class="built_in">module</span>=../lua-nginx-<span class="built_in">module</span> <span class="string">\</span></span><br><span class="line">--add-<span class="built_in">module</span>=../redis2-nginx-<span class="built_in">module</span> <span class="string">\</span></span><br><span class="line">--add-<span class="built_in">module</span>=../set-misc-nginx-<span class="built_in">module</span></span><br></pre></td></tr></table></figure>
-<h3 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h3><figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">make</span></span><br><span class="line"><span class="built_in">make</span> install</span><br></pre></td></tr></table></figure>
-<p>nginx被安装在<code>/usr/local/nginx</code> 下面,默认环境变量里面没有，需要增加连接<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s <span class="regexp">/usr/</span>local<span class="regexp">/nginx/</span>sbin<span class="regexp">/nginx /u</span>sr<span class="regexp">/sbin/</span>nginx</span><br></pre></td></tr></table></figure></p>
-<h1 id="配置-1"><a href="#配置-1" class="headerlink" title="配置"></a>配置</h1><h2 id="nginx-conf"><a href="#nginx-conf" class="headerlink" title="nginx.conf"></a>nginx.conf</h2><p>注释掉 server块，增加引用<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">include</span> <span class="regexp">/usr/</span>local<span class="regexp">/etc/</span>nginx<span class="regexp">/conf.d/</span>*.conf;</span><br></pre></td></tr></table></figure></p>
-<h2 id="demo-conf"><a href="#demo-conf" class="headerlink" title="demo.conf"></a>demo.conf</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">lua_package_path <span class="string">"/usr/share/lua/5.1/?.lua;;"</span>;</span><br><span class="line">server &#123;</span><br><span class="line">    listen 80;</span><br><span class="line">    server_name demo.local;    </span><br><span class="line">    root  html;</span><br><span class="line"></span><br><span class="line">    location /demo &#123;</span><br><span class="line">        default_type <span class="string">'text/html'</span>;</span><br><span class="line">        access_by_lua_file <span class="string">"/opt/demo.lua"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="demo-lua"><a href="#demo-lua" class="headerlink" title="demo.lua"></a>demo.lua</h2><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ngx.<span class="built_in">say</span>(<span class="string">"hello,world"</span>)</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2015/10/27/2015/nginx-lua-redis/" data-id="cijbm5x8t000jlipyirt0zjln" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -595,7 +581,7 @@ var _hmt = _hmt || [];
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">12</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂记/">杂记</a><span class="category-list-count">2</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">13</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂记/">杂记</a><span class="category-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -608,7 +594,7 @@ var _hmt = _hmt || [];
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">8</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">8</span></li></ul>
     </div>
   </div>
 
@@ -618,6 +604,10 @@ var _hmt = _hmt || [];
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2020/09/03/2020/spring-amqp-ack/">Spring Amqp Ack</a>
+          </li>
         
           <li>
             <a href="/2020/09/02/2020/minikube/">Macbook Minikube 配置</a>
@@ -633,10 +623,6 @@ var _hmt = _hmt || [];
         
           <li>
             <a href="/2016/01/12/2016/flask-bugs/">Flask入坑指南</a>
-          </li>
-        
-          <li>
-            <a href="/2015/12/04/2015/hexo-github-blog/">hexo+github page搭建博客</a>
           </li>
         
       </ul>

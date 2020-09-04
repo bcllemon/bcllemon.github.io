@@ -3,15 +3,21 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
-  <title>Category: 杂记 | Bowen</title>
+  <title>K8s 水平扩展 | Bowen</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Bowen">
-<meta property="og:url" content="http://bcllemon.github.io/categories/杂记/index.html">
+  <meta name="description" content="Deployment 关系Deployment 通过“控制器模式”，来操作 ReplicaSet 的个数和属性，进 而实现“水平扩展 / 收缩”和“滚动更新”这两个编排动作。 增加节点kubectl scale deployment nginx-deployment --replicas=4 查看扩展状态kubectl rollout status deployment/nginx-deploym">
+<meta property="og:type" content="article">
+<meta property="og:title" content="K8s 水平扩展">
+<meta property="og:url" content="http://bcllemon.github.io/2020/09/04/2020/k8s-scale/index.html">
 <meta property="og:site_name" content="Bowen">
+<meta property="og:description" content="Deployment 关系Deployment 通过“控制器模式”，来操作 ReplicaSet 的个数和属性，进 而实现“水平扩展 / 收缩”和“滚动更新”这两个编排动作。 增加节点kubectl scale deployment nginx-deployment --replicas=4 查看扩展状态kubectl rollout status deployment/nginx-deploym">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="http://bcllemon.github.io/images/2020/k8s-scale.png">
+<meta property="og:updated_time" content="2020-09-04T09:16:53.564Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Bowen">
+<meta name="twitter:title" content="K8s 水平扩展">
+<meta name="twitter:description" content="Deployment 关系Deployment 通过“控制器模式”，来操作 ReplicaSet 的个数和属性，进 而实现“水平扩展 / 收缩”和“滚动更新”这两个编排动作。 增加节点kubectl scale deployment nginx-deployment --replicas=4 查看扩展状态kubectl rollout status deployment/nginx-deploym">
+<meta name="twitter:image" content="http://bcllemon.github.io/images/2020/k8s-scale.png">
   
     <link rel="alternative" href="/atom.xml" title="Bowen" type="application/atom+xml">
   
@@ -66,68 +72,67 @@ var _hmt = _hmt || [];
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/09/01/2020/hello-world/" class="archive-article-date">
-  <time datetime="2020-09-01T00:00:00.000Z" itemprop="datePublished">Sep 1</time>
+        <section id="main"><article id="post-2020/k8s-scale" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/09/04/2020/k8s-scale/" class="article-date">
+  <time datetime="2020-09-04T17:02:00.000Z" itemprop="datePublished">2020-09-04</time>
 </a>
-      
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/09/01/2020/hello-world/"> Hello World</a>
+    <h1 class="article-title" itemprop="name">
+      K8s 水平扩展
     </h1>
   
 
-    </header>
-  </div>
-</article>
-  
+      </header>
     
-    
+    <div class="article-entry" itemprop="articleBody">
       
-        </div></section>
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2015" class="archive-year">2015</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2015/10/22/2015/zaji/" class="archive-article-date">
-  <time datetime="2015-10-22T10:16:00.000Z" itemprop="datePublished">Oct 22</time>
-</a>
-      
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/10/22/2015/zaji/">杂记</a>
-    </h1>
-  
+        <h1 id="Deployment-关系"><a href="#Deployment-关系" class="headerlink" title="Deployment 关系"></a>Deployment 关系</h1><p>Deployment 通过“控制器模式”，来操作 ReplicaSet 的个数和属性，进 而实现“水平扩展 / 收缩”和“滚动更新”这两个编排动作。<br><img src="/images/2020/k8s-scale.png" alt></p>
+<h1 id="增加节点"><a href="#增加节点" class="headerlink" title="增加节点"></a>增加节点</h1><p><code>kubectl scale deployment nginx-deployment --replicas=4</code></p>
+<h1 id="查看扩展状态"><a href="#查看扩展状态" class="headerlink" title="查看扩展状态"></a>查看扩展状态</h1><p><code>kubectl rollout status deployment/nginx-deployment</code></p>
+<h1 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h1><p><code>kubectl edit deployment/nginx-deployment</code></p>
+<h1 id="回滚"><a href="#回滚" class="headerlink" title="回滚"></a>回滚</h1><p><code>kubectl rollout undo deployment/nginx-deployment</code></p>
+<h1 id="变更历史"><a href="#变更历史" class="headerlink" title="变更历史"></a>变更历史</h1><p><code>kubectl apply -f nginx-deployment2.yaml --record
+kubectl rollout history deployment/nginx-deployment</code></p>
+<h1 id="查看版本变更"><a href="#查看版本变更" class="headerlink" title="查看版本变更"></a>查看版本变更</h1><p><code>kubectl rollout history deployment/nginx-deployment --revision=2</code></p>
+<h1 id="回滚指定版本"><a href="#回滚指定版本" class="headerlink" title="回滚指定版本"></a>回滚指定版本</h1><p><code>kubectl rollout undo deployment/nginx-deployment --to-revision=2</code></p>
+<h1 id="暂停滚动更新"><a href="#暂停滚动更新" class="headerlink" title="暂停滚动更新"></a>暂停滚动更新</h1><p><code>kubectl rollout pause deployment/nginx-deployment</code></p>
+<h1 id="恢复滚动更新"><a href="#恢复滚动更新" class="headerlink" title="恢复滚动更新"></a>恢复滚动更新</h1><p><code>kubectl rollout resume deployment/nginx-deployment</code></p>
 
-    </header>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://bcllemon.github.io/2020/09/04/2020/k8s-scale/" data-id="ckeo0ycwd0002xvh596mp92qd" class="article-share-link">Share</a>
+      
+      
+    </footer>
   </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/09/03/2020/spring-amqp-ack/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Spring Amqp Ack</div>
+    </a>
+  
+</nav>
+
+  
 </article>
-  
-  
-    </div></section>
-  
+
 </section>
         
           <aside id="sidebar">

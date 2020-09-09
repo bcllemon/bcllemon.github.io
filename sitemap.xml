@@ -2,135 +2,142 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://bcllemon.github.io/2015/10/18/2015/mongodbpython/</loc>
-    
-    <lastmod>2020-09-04T09:47:01.545Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://bcllemon.github.io/2015/10/29/2015/-ffmpeg-mp4-/</loc>
-    
-    <lastmod>2020-09-04T09:47:01.545Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://bcllemon.github.io/2016/01/12/2016/flask-bugs/</loc>
-    
-    <lastmod>2020-09-04T09:47:01.545Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://bcllemon.github.io/2015/10/22/2015/zaji/</loc>
-    
-    <lastmod>2020-09-04T09:47:01.545Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://bcllemon.github.io/2015/12/03/2015/wechat-yao/</loc>
-    
-    <lastmod>2020-09-04T09:47:01.545Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://bcllemon.github.io/2015/12/04/2015/spring-dynamic-datasource/</loc>
-    
-    <lastmod>2020-09-04T09:47:01.545Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://bcllemon.github.io/2015/10/21/2015/react-native-for-android--/</loc>
-    
-    <lastmod>2020-09-04T09:47:01.545Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://bcllemon.github.io/2015/10/29/2015/python-java-aes/</loc>
-    
-    <lastmod>2020-09-04T09:47:01.545Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://bcllemon.github.io/2015/10/27/2015/nginx-lua-redis/</loc>
-    
-    <lastmod>2020-09-04T09:47:01.545Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://bcllemon.github.io/2015/10/13/https/</loc>
-    
-    <lastmod>2020-09-04T09:47:01.545Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://bcllemon.github.io/2015/10/16/2015/iosdevicetoken/</loc>
-    
-    <lastmod>2020-09-04T09:47:01.545Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://bcllemon.github.io/2015/12/04/2015/hexo-github-blog/</loc>
-    
-    <lastmod>2020-09-04T09:47:01.545Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://bcllemon.github.io/2020/09/01/2020/hello-world/</loc>
-    
-    <lastmod>2020-09-04T09:47:01.545Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://bcllemon.github.io/2020/09/04/2020/hmac/</loc>
     
-    <lastmod>2020-09-04T09:47:01.545Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://bcllemon.github.io/2020/09/04/2020/java-aes-key/</loc>
-    
-    <lastmod>2020-09-04T09:47:01.545Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://bcllemon.github.io/2020/09/02/2020/k8s-nginx/</loc>
-    
-    <lastmod>2020-09-04T09:47:01.545Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://bcllemon.github.io/2020/09/04/2020/k8s-scale/</loc>
-    
-    <lastmod>2020-09-04T09:47:01.545Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://bcllemon.github.io/2020/09/02/2020/minikube/</loc>
-    
-    <lastmod>2020-09-04T09:47:01.545Z</lastmod>
+    <lastmod>2020-09-09T10:08:34.493Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://bcllemon.github.io/2020/09/03/2020/spring-amqp-ack/</loc>
     
-    <lastmod>2020-09-04T09:47:01.545Z</lastmod>
+    <lastmod>2020-09-09T10:08:34.493Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://bcllemon.github.io/2015/10/22/2015/zaji/</loc>
+    
+    <lastmod>2020-09-09T10:08:34.493Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://bcllemon.github.io/2015/10/13/https/</loc>
+    
+    <lastmod>2020-09-09T10:08:34.493Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://bcllemon.github.io/2020/09/01/2020/hello-world/</loc>
+    
+    <lastmod>2020-09-09T10:08:34.493Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://bcllemon.github.io/2016/01/12/2016/flask-bugs/</loc>
+    
+    <lastmod>2020-09-09T10:08:34.493Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://bcllemon.github.io/2020/09/04/2020/java-aes-key/</loc>
+    
+    <lastmod>2020-09-09T10:08:34.493Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://bcllemon.github.io/2020/09/02/2020/k8s-nginx/</loc>
+    
+    <lastmod>2020-09-09T10:08:34.493Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://bcllemon.github.io/2020/09/04/2020/k8s-scale/</loc>
+    
+    <lastmod>2020-09-09T10:08:34.493Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://bcllemon.github.io/2020/09/09/2020/k8s-statefulset/</loc>
+    
+    <lastmod>2020-09-09T10:08:34.493Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://bcllemon.github.io/2020/09/02/2020/minikube/</loc>
+    
+    <lastmod>2020-09-09T10:08:34.493Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://bcllemon.github.io/2015/12/04/2015/hexo-github-blog/</loc>
+    
+    <lastmod>2020-09-09T10:08:34.489Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://bcllemon.github.io/2015/12/03/2015/wechat-yao/</loc>
+    
+    <lastmod>2020-09-09T10:08:34.489Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://bcllemon.github.io/2015/12/04/2015/spring-dynamic-datasource/</loc>
+    
+    <lastmod>2020-09-09T10:08:34.489Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://bcllemon.github.io/2015/10/21/2015/react-native-for-android--/</loc>
+    
+    <lastmod>2020-09-09T10:08:34.489Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://bcllemon.github.io/2015/10/29/2015/python-java-aes/</loc>
+    
+    <lastmod>2020-09-09T10:08:34.489Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://bcllemon.github.io/2015/10/27/2015/nginx-lua-redis/</loc>
+    
+    <lastmod>2020-09-09T10:08:34.489Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://bcllemon.github.io/2015/10/18/2015/mongodbpython/</loc>
+    
+    <lastmod>2020-09-09T10:08:34.489Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://bcllemon.github.io/2015/10/29/2015/-ffmpeg-mp4-/</loc>
+    
+    <lastmod>2020-09-09T10:08:34.489Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://bcllemon.github.io/2015/10/16/2015/iosdevicetoken/</loc>
+    
+    <lastmod>2020-09-09T10:08:34.489Z</lastmod>
     
   </url>
   

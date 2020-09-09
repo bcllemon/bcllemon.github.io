@@ -68,6 +68,56 @@ var _hmt = _hmt || [];
       <div class="outer">
         <section id="main">
   
+    <article id="post-2020/k8s-statefulset" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/09/09/2020/k8s-statefulset/" class="article-date">
+  <time datetime="2020-09-09T17:03:00.000Z" itemprop="datePublished">2020-09-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/09/09/2020/k8s-statefulset/">K8s StatefulSet</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Stateful-Application"><a href="#Stateful-Application" class="headerlink" title="Stateful Application"></a>Stateful Application</h1><p>实例之间有不对等关系，以及实例对外部数据有依赖关系的应用，就被称为“有状态 应用”(Stateful Application)</p>
+<h1 id="拓扑状态"><a href="#拓扑状态" class="headerlink" title="拓扑状态"></a>拓扑状态</h1><p>这种情况意味着，应用的多个实例之间不是完全对等的关系。这些应用实例，必 须按照某些顺序启动，比如应用的主节点 A 要先于从节点 B 启动。而如果你把 A 和 B 两个 Pod 删除掉，它们再次被创建出来时也必须严格按照这个顺序才行。并且，新创建出来的 Pod，必须和原来 Pod 的网络标识一样，这样原先的访问者才能使用同样的方法，访问到 这个新 Pod。</p>
+<h2 id="StatefulSet实现"><a href="#StatefulSet实现" class="headerlink" title="StatefulSet实现"></a>StatefulSet实现</h2><p>StatefulSet 这个控制器的主要作用之一，就是使用 Pod 模板创建 Pod 的时候， 对它们进行编号，并且按照编号顺序逐一完成创建工作。而当 StatefulSet 的“控 制循环”发现 Pod 的“实际状态”与“期望状态”不一致，需要新建或者删除 Pod 进行“调谐”的时候，它会严格按照这些 Pod 编号的顺序，逐一完成这些操作。通过 Headless Service 的方式，StatefulSet 为每个 Pod 创建了一个固定并且稳定 的 DNS 记录，来作为它的访问入口。</p>
+<h2 id="Headless-Service-配置"><a href="#Headless-Service-配置" class="headerlink" title="Headless Service 配置"></a>Headless Service 配置</h2><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">  <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">      <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">      <span class="attr">targetPort:</span> <span class="number">80</span></span><br><span class="line">  <span class="attr">clusterIP:</span> <span class="string">None</span></span><br></pre></td></tr></table></figure>
+<h2 id="StatefulSet-配置"><a href="#StatefulSet-配置" class="headerlink" title="StatefulSet 配置"></a>StatefulSet 配置</h2><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">apiVersion</span>: apps/v1 </span><br><span class="line"><span class="attribute">kind</span>: StatefulSet</span><br><span class="line"><span class="attribute">metadata</span>:</span><br><span class="line">  <span class="attribute">name</span>: web</span><br><span class="line"><span class="attribute">spec</span>:</span><br><span class="line">  <span class="attribute">serviceName</span>: <span class="string">"nginx"</span></span><br><span class="line">  <span class="attribute">replicas</span>: <span class="number">2</span></span><br><span class="line">  <span class="attribute">selector</span>:</span><br><span class="line">    <span class="attribute">matchLabels</span>:</span><br><span class="line">      <span class="attribute">app</span>: nginx</span><br><span class="line">  <span class="attribute">template</span>:</span><br><span class="line">    <span class="attribute">metadata</span>:</span><br><span class="line">      <span class="attribute">labels</span>:</span><br><span class="line">        <span class="attribute">app</span>: nginx</span><br><span class="line">    <span class="attribute">spec</span>:</span><br><span class="line">      <span class="attribute">containers</span>:</span><br><span class="line">        - <span class="attribute">name</span>: nginx</span><br><span class="line">          <span class="attribute">image</span>: <span class="attribute">nginx</span>:<span class="number">1.8</span></span><br><span class="line">          <span class="attribute">ports</span>:</span><br><span class="line">            - <span class="attribute">containerPort</span>: <span class="number">80</span></span><br><span class="line">              <span class="attribute">name</span>: web</span><br></pre></td></tr></table></figure>
+<h1 id="存储状态"><a href="#存储状态" class="headerlink" title="存储状态"></a>存储状态</h1><p>这种情况意味着，应用的多个实例分别绑定了不同的存储数据。对于这些应用实 例来说，Pod A 第一次读取到的数据，和隔了十分钟之后再次读取到的数据，应该是同一 份，哪怕在此期间 Pod A 被重新创建过。这种情况最典型的例子，就是一个数据库应用的 多个存储实例。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>Kubernetes 项目引入了一组叫作 Persistent Volume Claim(PVC)和 Persistent Volume(PV)的 API 对象. Kubernetes 中 PVC 和 PV 的设计，实际上类似于“接口”和“实现”的思想。开发者 只要知道并会使用“接口”，即:PVC;而运维人员则负责给“接口”绑定具体的实现，即: PV。而 PVC、PV 的设计，也使得 StatefulSet 对存储状态的管理成为了可能。<br>StatefulSet 为每一个 Pod 分配并创建一个同样编号的 PVC。这样，Kubernetes 就可 以通过 Persistent Volume 机制为这个 PVC 绑定上对应的 PV，从而保证了每一个 Pod 都拥有 一个独立的 Volume。</p>
+<h2 id="PVC-配置"><a href="#PVC-配置" class="headerlink" title="PVC 配置"></a>PVC 配置</h2><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">kind:</span> PersistentVolumeClaim</span><br><span class="line"><span class="symbol">apiVersion:</span> v1</span><br><span class="line"><span class="symbol">metadata:</span></span><br><span class="line"><span class="symbol">  name:</span> pv-claim</span><br><span class="line"><span class="symbol">spec:</span></span><br><span class="line"><span class="symbol">  accessModes:</span></span><br><span class="line">    - ReadWriteOnce</span><br><span class="line"><span class="symbol">  resources:</span></span><br><span class="line"><span class="symbol">    requests:</span></span><br><span class="line"><span class="symbol">      storage:</span> <span class="number">1</span>Gi</span><br></pre></td></tr></table></figure>
+<h2 id="StatefulSet-配置-1"><a href="#StatefulSet-配置-1" class="headerlink" title="StatefulSet 配置"></a>StatefulSet 配置</h2><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span> <span class="comment"># for versions before 1.9.0 use apps/v1beta2</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">StatefulSet</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">web</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">serviceName:</span> <span class="string">"nginx"</span></span><br><span class="line">  <span class="attr">replicas:</span> <span class="number">2</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">          <span class="attr">image:</span> <span class="string">nginx:1.8</span></span><br><span class="line">          <span class="attr">ports:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">80</span></span><br><span class="line">              <span class="attr">name:</span> <span class="string">web</span></span><br><span class="line">          <span class="attr">volumeMounts:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">www</span></span><br><span class="line">              <span class="attr">mountPath:</span> <span class="string">/usr/share/nginx/html</span></span><br><span class="line">  <span class="attr">volumeClaimTemplates:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">metadata:</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">www</span></span><br><span class="line">      <span class="attr">spec:</span></span><br><span class="line">        <span class="attr">accessModes:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="string">ReadWriteOnce</span></span><br><span class="line">        <span class="attr">resources:</span></span><br><span class="line">          <span class="attr">requests:</span></span><br><span class="line">            <span class="attr">storage:</span> <span class="string">1Gi</span></span><br></pre></td></tr></table></figure>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>StatefulSet 其实就是一种特殊的 Deployment，而其独特之处在于，它的每个 Pod 都被编号了。而且，这个编号会体现在 Pod 的名字和 hostname 等标识信息上，这不仅代表了 Pod 的创建顺序，也是 Pod 的重要网络标 识(即:在整个集群里唯一的、可被的访问身份)。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://bcllemon.github.io/2020/09/09/2020/k8s-statefulset/" data-id="ckev803oz0007z5xtzv8jq40f" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-2020/hmac" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/09/04/2020/hmac/" class="article-date">
@@ -111,7 +161,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/04/2020/hmac/" data-id="ckeo213z4000134sq37xi9lft" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/04/2020/hmac/" data-id="ckev803ou0001z5xtrhymf0z6" class="article-share-link">Share</a>
       
       
     </footer>
@@ -158,7 +208,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/04/2020/java-aes-key/" data-id="ckeo213z5000234sqit3f6sa8" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/04/2020/java-aes-key/" data-id="ckev803ov0002z5xthzffsak5" class="article-share-link">Share</a>
       
       
     </footer>
@@ -209,7 +259,7 @@ kubectl rollout history deployment/nginx-deployment</code></p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/04/2020/k8s-scale/" data-id="ckeo213z7000534sqy1ut50xv" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/04/2020/k8s-scale/" data-id="ckev803ox0005z5xtios9rd8w" class="article-share-link">Share</a>
       
       
     </footer>
@@ -250,7 +300,48 @@ kubectl rollout history deployment/nginx-deployment</code></p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/03/2020/spring-amqp-ack/" data-id="ckeo213z9000934sqzrpxjsod" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/03/2020/spring-amqp-ack/" data-id="ckev803p1000bz5xty3imzfvt" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-2020/k8s-nginx" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/09/02/2020/k8s-nginx/" class="article-date">
+  <time datetime="2020-09-02T00:00:00.000Z" itemprop="datePublished">2020-09-02</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/09/02/2020/k8s-nginx/">K8s 配置 Nginx</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="deployment-文件"><a href="#deployment-文件" class="headerlink" title="deployment 文件"></a>deployment 文件</h1><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span> <span class="comment"># for versions before 1.9.0 use apps/v1beta2</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nginx-deployment</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">  <span class="attr">replicas:</span> <span class="number">1</span> <span class="comment"># tells deployment to run 2 pods matching the template</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">shareProcessNamespace:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">          <span class="attr">image:</span> <span class="string">nginx:1.8</span></span><br><span class="line">          <span class="attr">ports:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">80</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nginx-service</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">  <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">      <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">      <span class="attr">targetPort:</span> <span class="number">80</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">NodePort</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://bcllemon.github.io/2020/09/02/2020/k8s-nginx/" data-id="ckev803ow0003z5xt3aytbhbe" class="article-share-link">Share</a>
       
       
     </footer>
@@ -306,48 +397,7 @@ kubectl rollout history deployment/nginx-deployment</code></p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/02/2020/minikube/" data-id="ckeo213z8000734sqaqyt9q4o" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-2020/k8s-nginx" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/09/02/2020/k8s-nginx/" class="article-date">
-  <time datetime="2020-09-02T00:00:00.000Z" itemprop="datePublished">2020-09-02</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/技术/">技术</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/09/02/2020/k8s-nginx/">K8s 配置 Nginx</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="deployment-文件"><a href="#deployment-文件" class="headerlink" title="deployment 文件"></a>deployment 文件</h1><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span> <span class="comment"># for versions before 1.9.0 use apps/v1beta2</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nginx-deployment</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">  <span class="attr">replicas:</span> <span class="number">1</span> <span class="comment"># tells deployment to run 2 pods matching the template</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">shareProcessNamespace:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">          <span class="attr">image:</span> <span class="string">nginx:1.8</span></span><br><span class="line">          <span class="attr">ports:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">80</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nginx-service</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">  <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">      <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">      <span class="attr">targetPort:</span> <span class="number">80</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">NodePort</span></span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/02/2020/k8s-nginx/" data-id="ckeo213z6000334sqlv59iake" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/02/2020/minikube/" data-id="ckev803p00009z5xtxapb2qa5" class="article-share-link">Share</a>
       
       
     </footer>
@@ -396,7 +446,7 @@ kubectl rollout history deployment/nginx-deployment</code></p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/01/2020/hello-world/" data-id="ckeo213z2000034sqe0uyh3u9" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/01/2020/hello-world/" data-id="ckev803os0000z5xtnua4lsu2" class="article-share-link">Share</a>
       
       
     </footer>
@@ -508,59 +558,6 @@ kubectl rollout history deployment/nginx-deployment</code></p>
 
 
   
-    <article id="post-2015/spring-dynamic-datasource" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/12/04/2015/spring-dynamic-datasource/" class="article-date">
-  <time datetime="2015-12-04T14:29:00.000Z" itemprop="datePublished">2015-12-04</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/技术/">技术</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/12/04/2015/spring-dynamic-datasource/">spring动态数据源</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h1><p>通过使用Spring提供的AbstractRoutingDataSource替代原有 dataSource，在每次操作数据库的时候通过类中的determineTargetDataSource()方法获取当前数据源。这样我们就可以通过切面技术，在不同的切面，切入不同的数据源名称，使Spring获取的时候拿到的是不同的数据源。就相当于在多个 dataSource前面增加了一个路由层。</p>
-<h1 id="基础用法"><a href="#基础用法" class="headerlink" title="基础用法"></a>基础用法</h1><h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>通过查看AbstractRoutingDataSource的determineTargetDataSource实现，可以发现基本原理就是通过determineCurrentLookupKey()获取当前数据源的 key，然后从resolvedDataSources获取对应数据源并返回。无法获取则返回默认配置数据源。而resolvedDataSources是通过targetDataSources初始化的。也就是说，我们在使用中配置两个地方。</p>
-<ol>
-<li>defaultTargetDataSource</li>
-<li>targetDataSources<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> afterPropertiesSet() &#123;</span><br><span class="line">	<span class="keyword">if</span> (<span class="keyword">this</span>.targetDataSources == <span class="keyword">null</span>) &#123;</span><br><span class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Property 'targetDataSources' is required"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">this</span>.resolvedDataSources = <span class="keyword">new</span> <span class="keyword">HashMap</span>&lt;<span class="keyword">Object</span>, DataSource&gt;(<span class="keyword">this</span>.targetDataSources.<span class="built_in">size</span>());</span><br><span class="line">	<span class="keyword">for</span> (Map.Entry&lt;<span class="keyword">Object</span>, <span class="keyword">Object</span>&gt; entry : <span class="keyword">this</span>.targetDataSources.entrySet()) &#123;</span><br><span class="line">		<span class="keyword">Object</span> lookupKey = resolveSpecifiedLookupKey(entry.getKey());</span><br><span class="line">		DataSource dataSource = resolveSpecifiedDataSource(entry.getValue());</span><br><span class="line">		<span class="keyword">this</span>.resolvedDataSources.put(lookupKey, dataSource);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (<span class="keyword">this</span>.defaultTargetDataSource != <span class="keyword">null</span>) &#123;</span><br><span class="line">		<span class="keyword">this</span>.resolvedDefaultDataSource = resolveSpecifiedDataSource(<span class="keyword">this</span>.defaultTargetDataSource);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">   <span class="keyword">protected</span> DataSource determineTargetDataSource() &#123;</span><br><span class="line">	Assert.notNull(<span class="keyword">this</span>.resolvedDataSources, <span class="string">"DataSource router not initialized"</span>);</span><br><span class="line">	Object lookupKey = determineCurrentLookupKey();</span><br><span class="line">	DataSource dataSource = <span class="keyword">this</span>.resolvedDataSources.<span class="keyword">get</span>(lookupKey);</span><br><span class="line">	<span class="keyword">if</span> (dataSource == <span class="literal">null</span> &amp;&amp; (<span class="keyword">this</span>.lenientFallback || lookupKey == <span class="literal">null</span>)) &#123;</span><br><span class="line">		dataSource = <span class="keyword">this</span>.resolvedDefaultDataSource;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (dataSource == <span class="literal">null</span>) &#123;</span><br><span class="line">		<span class="keyword">throw</span> new IllegalStateException(<span class="string">"Cannot determine target DataSource for lookup key ["</span> + lookupKey + <span class="string">"]"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> dataSource;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="步骤1"><a href="#步骤1" class="headerlink" title="步骤1"></a>步骤1</h2><p>通过 ThreadLocal 记录获取当前使用的数据源 Key<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DataSourceHolder</span> &#123;</span></span><br><span class="line">    <span class="comment">//线程本地环境</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> ThreadLocal&lt;<span class="keyword">String</span>&gt; dataSources = <span class="keyword">new</span> ThreadLocal&lt;<span class="keyword">String</span>&gt;();</span><br><span class="line">    <span class="comment">//设置数据源</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setDataSource</span><span class="params">(<span class="keyword">String</span> customerType)</span> </span>&#123;</span><br><span class="line">        dataSources.<span class="built_in">set</span>(customerType);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//获取数据源</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">String</span> <span class="title">getDataSource</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> (<span class="keyword">String</span>) dataSources.<span class="built_in">get</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//清除数据源</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">clearDataSource</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        dataSources.<span class="built_in">remove</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="步骤2"><a href="#步骤2" class="headerlink" title="步骤2"></a>步骤2</h2><p>实现AbstractRoutingDataSource<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public <span class="class"><span class="keyword">class</span> <span class="title">DynamicDataSource</span> <span class="keyword">extends</span> <span class="title">AbstractRoutingDataSource</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="type">Object</span> determineCurrentLookupKey() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="type">DataSourceHolder</span>.getDataSource();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="步骤3"><a href="#步骤3" class="headerlink" title="步骤3"></a>步骤3</h2><p>配置 spring 文件<br><figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean<span class="built_in"> id</span>=<span class="string">"adamDataSource1"</span> class=<span class="string">"com.alibaba.druid.pool.DruidDataSource"</span></span><br><span class="line">          destroy-method=<span class="string">"close"</span>&gt;</span><br><span class="line">    &lt;property<span class="built_in"> name</span>=<span class="string">"url"</span> <span class="keyword">value</span>=<span class="string">"jdbc:mysql://localhost:3306/am?useUnicode=true&amp;amp;characterEncoding=utf8"</span>/&gt;</span><br><span class="line">    &lt;property<span class="built_in"> name</span>=<span class="string">"username"</span> <span class="keyword">value</span>=<span class="string">"root"</span> /&gt;</span><br><span class="line">    &lt;property<span class="built_in"> name</span>=<span class="string">"password"</span> <span class="keyword">value</span>=<span class="string">"root"</span> /&gt;</span><br><span class="line">    &lt;property<span class="built_in"> name</span>=<span class="string">"filters"</span> <span class="keyword">value</span>=<span class="string">"stat"</span> /&gt;</span><br><span class="line">    &lt;property<span class="built_in"> name</span>=<span class="string">"maxActive"</span> <span class="keyword">value</span>=<span class="string">"500"</span> /&gt;</span><br><span class="line">    &lt;property<span class="built_in"> name</span>=<span class="string">"initialSize"</span> <span class="keyword">value</span>=<span class="string">"10"</span> /&gt;</span><br><span class="line">    &lt;property<span class="built_in"> name</span>=<span class="string">"maxWait"</span> <span class="keyword">value</span>=<span class="string">"60000"</span> /&gt;</span><br><span class="line">    &lt;property<span class="built_in"> name</span>=<span class="string">"minIdle"</span> <span class="keyword">value</span>=<span class="string">"10"</span> /&gt;</span><br><span class="line">    &lt;property<span class="built_in"> name</span>=<span class="string">"timeBetweenEvictionRunsMillis"</span> <span class="keyword">value</span>=<span class="string">"60000"</span> /&gt;</span><br><span class="line">    &lt;property<span class="built_in"> name</span>=<span class="string">"minEvictableIdleTimeMillis"</span> <span class="keyword">value</span>=<span class="string">"300000"</span> /&gt;</span><br><span class="line">    &lt;property<span class="built_in"> name</span>=<span class="string">"validationQuery"</span> <span class="keyword">value</span>=<span class="string">"SELECT 'x'"</span> /&gt;</span><br><span class="line">    &lt;property<span class="built_in"> name</span>=<span class="string">"testWhileIdle"</span> <span class="keyword">value</span>=<span class="string">"true"</span> /&gt;</span><br><span class="line">    &lt;property<span class="built_in"> name</span>=<span class="string">"testOnBorrow"</span> <span class="keyword">value</span>=<span class="string">"false"</span> /&gt;</span><br><span class="line">    &lt;property<span class="built_in"> name</span>=<span class="string">"testOnReturn"</span> <span class="keyword">value</span>=<span class="string">"false"</span> /&gt;</span><br><span class="line">&lt;/bean&gt;</span><br><span class="line">&lt;bean<span class="built_in"> id</span>=<span class="string">"adamDataSource2"</span> class=<span class="string">"com.alibaba.druid.pool.DruidDataSource"</span></span><br><span class="line">          destroy-method=<span class="string">"close"</span>&gt;</span><br><span class="line">    &lt;property<span class="built_in"> name</span>=<span class="string">"url"</span> <span class="keyword">value</span>=<span class="string">"jdbc:mysql://localhost:3306/am2?useUnicode=true&amp;amp;characterEncoding=utf8"</span>/&gt;</span><br><span class="line">    &lt;property<span class="built_in"> name</span>=<span class="string">"username"</span> <span class="keyword">value</span>=<span class="string">"root"</span> /&gt;</span><br><span class="line">    &lt;property<span class="built_in"> name</span>=<span class="string">"password"</span> <span class="keyword">value</span>=<span class="string">"root"</span> /&gt;</span><br><span class="line">    &lt;property<span class="built_in"> name</span>=<span class="string">"filters"</span> <span class="keyword">value</span>=<span class="string">"stat"</span> /&gt;</span><br><span class="line">    &lt;property<span class="built_in"> name</span>=<span class="string">"maxActive"</span> <span class="keyword">value</span>=<span class="string">"500"</span> /&gt;</span><br><span class="line">    &lt;property<span class="built_in"> name</span>=<span class="string">"initialSize"</span> <span class="keyword">value</span>=<span class="string">"10"</span> /&gt;</span><br><span class="line">    &lt;property<span class="built_in"> name</span>=<span class="string">"maxWait"</span> <span class="keyword">value</span>=<span class="string">"60000"</span> /&gt;</span><br><span class="line">    &lt;property<span class="built_in"> name</span>=<span class="string">"minIdle"</span> <span class="keyword">value</span>=<span class="string">"10"</span> /&gt;</span><br><span class="line">    &lt;property<span class="built_in"> name</span>=<span class="string">"timeBetweenEvictionRunsMillis"</span> <span class="keyword">value</span>=<span class="string">"60000"</span> /&gt;</span><br><span class="line">    &lt;property<span class="built_in"> name</span>=<span class="string">"minEvictableIdleTimeMillis"</span> <span class="keyword">value</span>=<span class="string">"300000"</span> /&gt;</span><br><span class="line">    &lt;property<span class="built_in"> name</span>=<span class="string">"validationQuery"</span> <span class="keyword">value</span>=<span class="string">"SELECT 'x'"</span> /&gt;</span><br><span class="line">    &lt;property<span class="built_in"> name</span>=<span class="string">"testWhileIdle"</span> <span class="keyword">value</span>=<span class="string">"true"</span> /&gt;</span><br><span class="line">    &lt;property<span class="built_in"> name</span>=<span class="string">"testOnBorrow"</span> <span class="keyword">value</span>=<span class="string">"false"</span> /&gt;</span><br><span class="line">    &lt;property<span class="built_in"> name</span>=<span class="string">"testOnReturn"</span> <span class="keyword">value</span>=<span class="string">"false"</span> /&gt;</span><br><span class="line">&lt;/bean&gt;</span><br><span class="line"></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"dataSource"</span> <span class="attr">class</span>=<span class="string">"com.guall.dao.DynamicDataSource"</span>&gt;</span></span></span><br><span class="line"><span class="xml">    </span><span class="xml"><span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"targetDataSources"</span>&gt;</span></span></span><br><span class="line"><span class="xml">    </span><span class="xml"><span class="tag">&lt;<span class="name">map</span> <span class="attr">key-type</span>=<span class="string">"java.lang.String"</span>&gt;</span></span></span><br><span class="line"><span class="xml">       </span><span class="xml"><span class="tag">&lt;<span class="name">entry</span> <span class="attr">key</span>=<span class="string">"adamDataSource1"</span> <span class="attr">value-ref</span>=<span class="string">"adamDataSource1"</span>&gt;</span><span class="tag">&lt;/<span class="name">entry</span>&gt;</span></span></span><br><span class="line"><span class="xml">       </span><span class="xml"><span class="tag">&lt;<span class="name">entry</span> <span class="attr">key</span>=<span class="string">"adamDataSource2"</span> <span class="attr">value-ref</span>=<span class="string">"adamDataSource2"</span>&gt;</span><span class="tag">&lt;/<span class="name">entry</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;/<span class="name">map</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="comment">&lt;!-- 默认目标数据源为你主库数据源 --&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"defaultTargetDataSource"</span> <span class="attr">ref</span>=<span class="string">"adamDataSource"</span>/&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"adamJdbcTemplate"</span> <span class="attr">class</span>=<span class="string">"org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate"</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">constructor-arg</span> <span class="attr">name</span>=<span class="string">"dataSource"</span> <span class="attr">ref</span>=<span class="string">"dataSource"</span>/&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"sessionFactory"</span> <span class="attr">class</span>=<span class="string">"org.springframework.orm.hibernate4.LocalSessionFactoryBean"</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"dataSource"</span> <span class="attr">ref</span>=<span class="string">"dataSource"</span> /&gt;</span></span></span><br><span class="line"><span class="xml">    </span><span class="xml"><span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"hibernateProperties"</span>&gt;</span></span></span><br><span class="line"><span class="xml">        </span><span class="xml"><span class="tag">&lt;<span class="name">props</span>&gt;</span></span></span><br><span class="line"><span class="xml">            </span><span class="xml"><span class="tag">&lt;<span class="name">prop</span> <span class="attr">key</span>=<span class="string">"hibernate.dialect"</span>&gt;</span>org.hibernate.dialect.MySQLDialect<span class="tag">&lt;/<span class="name">prop</span>&gt;</span></span></span><br><span class="line"><span class="xml">            </span><span class="xml"><span class="tag">&lt;<span class="name">prop</span> <span class="attr">key</span>=<span class="string">"hibernate.hbm2ddl.auto"</span>&gt;</span>update<span class="tag">&lt;/<span class="name">prop</span>&gt;</span></span></span><br><span class="line"><span class="xml">            </span><span class="xml"><span class="tag">&lt;<span class="name">prop</span> <span class="attr">key</span>=<span class="string">"hibernate.show_sql"</span>&gt;</span>true<span class="tag">&lt;/<span class="name">prop</span>&gt;</span></span></span><br><span class="line"><span class="xml">            </span><span class="xml"><span class="tag">&lt;<span class="name">prop</span> <span class="attr">key</span>=<span class="string">"hibernate.format_sql"</span>&gt;</span>true<span class="tag">&lt;/<span class="name">prop</span>&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">props</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span></span><br></pre></td></tr></table></figure></p>
-<h2 id="步骤4"><a href="#步骤4" class="headerlink" title="步骤4"></a>步骤4</h2><p>前三步已经完成了所有的准备工作，剩下的就是在采取不同的方式，根据需要来切换数据源了。可以用到的方式，如 Filter、Interceptor、AOP 等。</p>
-<h1 id="高级用法"><a href="#高级用法" class="headerlink" title="高级用法"></a>高级用法</h1><p>不预先配置多种数据源，通过重写determineTargetDataSource方法，按照自己的方式进行数据源的创建和获取操作。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2015/12/04/2015/spring-dynamic-datasource/" data-id="cijbm5x8k000dlipy7fwn8vea" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -574,7 +571,7 @@ kubectl rollout history deployment/nginx-deployment</code></p>
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">16</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂记/">杂记</a><span class="category-list-count">2</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂记/">杂记</a><span class="category-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -587,7 +584,7 @@ kubectl rollout history deployment/nginx-deployment</code></p>
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">8</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">8</span></li></ul>
     </div>
   </div>
 
@@ -597,6 +594,10 @@ kubectl rollout history deployment/nginx-deployment</code></p>
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2020/09/09/2020/k8s-statefulset/">K8s StatefulSet</a>
+          </li>
         
           <li>
             <a href="/2020/09/04/2020/hmac/">HMAC 算法</a>
@@ -612,10 +613,6 @@ kubectl rollout history deployment/nginx-deployment</code></p>
         
           <li>
             <a href="/2020/09/03/2020/spring-amqp-ack/">Spring Amqp Ack</a>
-          </li>
-        
-          <li>
-            <a href="/2020/09/02/2020/minikube/">Macbook Minikube 配置</a>
           </li>
         
       </ul>

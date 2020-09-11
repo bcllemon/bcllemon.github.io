@@ -68,6 +68,59 @@ var _hmt = _hmt || [];
       <div class="outer">
         <section id="main">
   
+    <article id="post-2020/k8s-deamonset" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/09/11/2020/k8s-deamonset/" class="article-date">
+  <time datetime="2020-09-11T10:33:00.000Z" itemprop="datePublished">2020-09-11</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/09/11/2020/k8s-deamonset/">K8s DeamonSet</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h1><p>DaemonSet 的主要作用，是让你在 Kubernetes 集群里，运行一个 Daemon Pod。 </p>
+<h1 id="特征"><a href="#特征" class="headerlink" title="特征"></a>特征</h1><ol>
+<li>这个 Pod 运行在 Kubernetes 集群里的每一个节点(Node)上;</li>
+<li>每个节点上只有一个这样的 Pod 实例;</li>
+<li>当有新的节点加入 Kubernetes 集群后，该 Pod 会自动地在新节点上被创建出来;而当旧 节点被删除后，它上面的 Pod 也相应地会被回收掉。</li>
+</ol>
+<h1 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h1><ol>
+<li>各种网络插件的 Agent 组件，都必须运行在每一个节点上，用来处理这个节点上的容器网 络;</li>
+<li>各种存储插件的 Agent 组件，也必须运行在每一个节点上，用来在这个节点上挂载远程存 储目录，操作容器的 Volume 目录;</li>
+<li>各种监控组件和日志组件，也必须运行在每一个节点上，负责这个节点上的监控信息和日志 搜集。</li>
+</ol>
+<h1 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h1><p>Deployment 部署的副本 Pod 会分布在各个 Node 上，每个 Node 都可能运行好几个副本。DaemonSet 的不同之处在于：每个 Node 上最多只能运行一个副本。</p>
+<p><img src="/images/2020/k8s-scale.png" alt></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://bcllemon.github.io/2020/09/11/2020/k8s-deamonset/" data-id="ckexnkd1u00030crcleyrs916" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-2020/k8s-statefulset" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/09/09/2020/k8s-statefulset/" class="article-date">
@@ -108,7 +161,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/09/2020/k8s-statefulset/" data-id="ckev803oz0007z5xtzv8jq40f" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/09/2020/k8s-statefulset/" data-id="ckexnkd1y00090crc8s6o1kv3" class="article-share-link">Share</a>
       
       
     </footer>
@@ -161,7 +214,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/04/2020/hmac/" data-id="ckev803ou0001z5xtrhymf0z6" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/04/2020/hmac/" data-id="ckexnkd1s00010crcyhkhpgjp" class="article-share-link">Share</a>
       
       
     </footer>
@@ -208,7 +261,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/04/2020/java-aes-key/" data-id="ckev803ov0002z5xthzffsak5" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/04/2020/java-aes-key/" data-id="ckexnkd1t00020crcjhmyz901" class="article-share-link">Share</a>
       
       
     </footer>
@@ -259,7 +312,7 @@ kubectl rollout history deployment/nginx-deployment</code></p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/04/2020/k8s-scale/" data-id="ckev803ox0005z5xtios9rd8w" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/04/2020/k8s-scale/" data-id="ckexnkd1x00070crck5qc7hn3" class="article-share-link">Share</a>
       
       
     </footer>
@@ -300,7 +353,7 @@ kubectl rollout history deployment/nginx-deployment</code></p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/03/2020/spring-amqp-ack/" data-id="ckev803p1000bz5xty3imzfvt" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/03/2020/spring-amqp-ack/" data-id="ckexnkd20000d0crci2o73ebe" class="article-share-link">Share</a>
       
       
     </footer>
@@ -341,7 +394,7 @@ kubectl rollout history deployment/nginx-deployment</code></p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/02/2020/k8s-nginx/" data-id="ckev803ow0003z5xt3aytbhbe" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/02/2020/k8s-nginx/" data-id="ckexnkd1v00050crcy76bolb4" class="article-share-link">Share</a>
       
       
     </footer>
@@ -397,7 +450,7 @@ kubectl rollout history deployment/nginx-deployment</code></p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/02/2020/minikube/" data-id="ckev803p00009z5xtxapb2qa5" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/02/2020/minikube/" data-id="ckexnkd1z000b0crcp9ppeo5b" class="article-share-link">Share</a>
       
       
     </footer>
@@ -446,7 +499,7 @@ kubectl rollout history deployment/nginx-deployment</code></p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/01/2020/hello-world/" data-id="ckev803os0000z5xtnua4lsu2" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/01/2020/hello-world/" data-id="ckexnkd1q00000crc0pitzius" class="article-share-link">Share</a>
       
       
     </footer>
@@ -508,59 +561,9 @@ kubectl rollout history deployment/nginx-deployment</code></p>
 
 
   
-    <article id="post-2015/hexo-github-blog" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/12/04/2015/hexo-github-blog/" class="article-date">
-  <time datetime="2015-12-04T23:07:00.000Z" itemprop="datePublished">2015-12-04</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/技术/">技术</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/12/04/2015/hexo-github-blog/">hexo+github page搭建博客</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="hexo安装"><a href="#hexo安装" class="headerlink" title="hexo安装"></a>hexo安装</h1><h2 id="安装-nvm"><a href="#安装-nvm" class="headerlink" title="安装 nvm"></a>安装 nvm</h2><p><code>curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.29.0/install.sh | bash</code></p>
-<h2 id="安装-Node"><a href="#安装-Node" class="headerlink" title="安装 Node"></a>安装 Node</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nvm install node &amp;&amp; nvm alias<span class="built_in"> default </span>node</span><br><span class="line">nvm use --delete-prefix v4.2.1 --silent</span><br></pre></td></tr></table></figure>
-<h2 id="切换taobao-源"><a href="#切换taobao-源" class="headerlink" title="切换taobao 源"></a>切换taobao 源</h2><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="built_in">config</span> <span class="built_in">set</span> registry https:<span class="comment">//registry.npm.taobao.org</span></span><br><span class="line">npm <span class="built_in">config</span> <span class="built_in">set</span> disturl https:<span class="comment">//npm.taobao.org/dist</span></span><br></pre></td></tr></table></figure>
-<h2 id="安装-hexo"><a href="#安装-hexo" class="headerlink" title="安装 hexo"></a>安装 hexo</h2><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="keyword">install</span> -g hexo</span><br></pre></td></tr></table></figure>
-<h1 id="hexo-使用"><a href="#hexo-使用" class="headerlink" title="hexo 使用"></a>hexo 使用</h1><h2 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h2><figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> hexo</span><br><span class="line"><span class="built_in">cd</span> hexo</span><br><span class="line">hexo init</span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
-<h2 id="生成文件"><a href="#生成文件" class="headerlink" title="生成文件"></a>生成文件</h2><figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo <span class="keyword">generate</span></span><br></pre></td></tr></table></figure>
-<p>或<br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">hexo g</span></span><br></pre></td></tr></table></figure></p>
-<h2 id="清理文件"><a href="#清理文件" class="headerlink" title="清理文件"></a>清理文件</h2><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">hexo clean</span></span><br></pre></td></tr></table></figure>
-<h2 id="本地预览"><a href="#本地预览" class="headerlink" title="本地预览"></a>本地预览</h2><figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo <span class="keyword">server</span></span><br></pre></td></tr></table></figure>
-<p>或<br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">hexo s</span></span><br></pre></td></tr></table></figure></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2015/12/04/2015/hexo-github-blog/" data-id="cijbm5x9b000plipy1a4dlpy7" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
     </nav>
   
 </section>
@@ -571,7 +574,7 @@ kubectl rollout history deployment/nginx-deployment</code></p>
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂记/">杂记</a><span class="category-list-count">2</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">18</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂记/">杂记</a><span class="category-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -584,7 +587,7 @@ kubectl rollout history deployment/nginx-deployment</code></p>
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">8</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">8</span></li></ul>
     </div>
   </div>
 
@@ -594,6 +597,10 @@ kubectl rollout history deployment/nginx-deployment</code></p>
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2020/09/11/2020/k8s-deamonset/">K8s DeamonSet</a>
+          </li>
         
           <li>
             <a href="/2020/09/09/2020/k8s-statefulset/">K8s StatefulSet</a>
@@ -609,10 +616,6 @@ kubectl rollout history deployment/nginx-deployment</code></p>
         
           <li>
             <a href="/2020/09/04/2020/k8s-scale/">K8s 水平扩展</a>
-          </li>
-        
-          <li>
-            <a href="/2020/09/03/2020/spring-amqp-ack/">Spring Amqp Ack</a>
           </li>
         
       </ul>

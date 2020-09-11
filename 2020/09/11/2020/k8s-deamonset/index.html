@@ -3,19 +3,21 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
-  <title>用 FFMPEG 合并 MP4 视频 | Bowen</title>
+  <title>K8s DeamonSet | Bowen</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="ffmpeg + ts重磅推出终极解决方案。这个的思路是先将 mp4 转化为同样编码形式的 ts 流，因为 ts流是可以 concate 的，先把 mp4 封装成 ts ，然后 concate ts 流， 最后再把 ts 流转化为 mp4。123ffmpeg -i 1.mp4 -vcodec copy -acodec copy -vbsf h264_mp4toannexb 1.tsffmpeg -">
+  <meta name="description" content="作用DaemonSet 的主要作用，是让你在 Kubernetes 集群里，运行一个 Daemon Pod。  特征 这个 Pod 运行在 Kubernetes 集群里的每一个节点(Node)上; 每个节点上只有一个这样的 Pod 实例; 当有新的节点加入 Kubernetes 集群后，该 Pod 会自动地在新节点上被创建出来;而当旧 节点被删除后，它上面的 Pod 也相应地会被回收掉。  场景">
 <meta property="og:type" content="article">
-<meta property="og:title" content="用 FFMPEG 合并 MP4 视频">
-<meta property="og:url" content="http://bcllemon.github.io/2015/10/29/2015/-ffmpeg-mp4-/index.html">
+<meta property="og:title" content="K8s DeamonSet">
+<meta property="og:url" content="http://bcllemon.github.io/2020/09/11/2020/k8s-deamonset/index.html">
 <meta property="og:site_name" content="Bowen">
-<meta property="og:description" content="ffmpeg + ts重磅推出终极解决方案。这个的思路是先将 mp4 转化为同样编码形式的 ts 流，因为 ts流是可以 concate 的，先把 mp4 封装成 ts ，然后 concate ts 流， 最后再把 ts 流转化为 mp4。123ffmpeg -i 1.mp4 -vcodec copy -acodec copy -vbsf h264_mp4toannexb 1.tsffmpeg -">
+<meta property="og:description" content="作用DaemonSet 的主要作用，是让你在 Kubernetes 集群里，运行一个 Daemon Pod。  特征 这个 Pod 运行在 Kubernetes 集群里的每一个节点(Node)上; 每个节点上只有一个这样的 Pod 实例; 当有新的节点加入 Kubernetes 集群后，该 Pod 会自动地在新节点上被创建出来;而当旧 节点被删除后，它上面的 Pod 也相应地会被回收掉。  场景">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-09-11T02:59:32.689Z">
+<meta property="og:image" content="http://bcllemon.github.io/images/2020/k8s-scale.png">
+<meta property="og:updated_time" content="2020-09-11T02:59:32.693Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="用 FFMPEG 合并 MP4 视频">
-<meta name="twitter:description" content="ffmpeg + ts重磅推出终极解决方案。这个的思路是先将 mp4 转化为同样编码形式的 ts 流，因为 ts流是可以 concate 的，先把 mp4 封装成 ts ，然后 concate ts 流， 最后再把 ts 流转化为 mp4。123ffmpeg -i 1.mp4 -vcodec copy -acodec copy -vbsf h264_mp4toannexb 1.tsffmpeg -">
+<meta name="twitter:title" content="K8s DeamonSet">
+<meta name="twitter:description" content="作用DaemonSet 的主要作用，是让你在 Kubernetes 集群里，运行一个 Daemon Pod。  特征 这个 Pod 运行在 Kubernetes 集群里的每一个节点(Node)上; 每个节点上只有一个这样的 Pod 实例; 当有新的节点加入 Kubernetes 集群后，该 Pod 会自动地在新节点上被创建出来;而当旧 节点被删除后，它上面的 Pod 也相应地会被回收掉。  场景">
+<meta name="twitter:image" content="http://bcllemon.github.io/images/2020/k8s-scale.png">
   
     <link rel="alternative" href="/atom.xml" title="Bowen" type="application/atom+xml">
   
@@ -70,14 +72,14 @@ var _hmt = _hmt || [];
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-2015/-ffmpeg-mp4-" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-2020/k8s-deamonset" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2015/10/29/2015/-ffmpeg-mp4-/" class="article-date">
-  <time datetime="2015-10-29T14:28:00.000Z" itemprop="datePublished">2015-10-29</time>
+    <a href="/2020/09/11/2020/k8s-deamonset/" class="article-date">
+  <time datetime="2020-09-11T10:33:00.000Z" itemprop="datePublished">2020-09-11</time>
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/其他/">其他</a>
+    <a class="article-category-link" href="/categories/技术/">技术</a>
   </div>
 
   </div>
@@ -88,7 +90,7 @@ var _hmt = _hmt || [];
         
   
     <h1 class="article-title" itemprop="name">
-      用 FFMPEG 合并 MP4 视频
+      K8s DeamonSet
     </h1>
   
 
@@ -96,12 +98,24 @@ var _hmt = _hmt || [];
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="ffmpeg-ts"><a href="#ffmpeg-ts" class="headerlink" title="ffmpeg + ts"></a>ffmpeg + ts</h1><p>重磅推出终极解决方案。这个的思路是先将 mp4 转化为同样编码形式的 ts 流，因为 ts流是可以 concate 的，先把 mp4 封装成 ts ，然后 concate ts 流， 最后再把 ts 流转化为 mp4。<br><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -i <span class="number">1</span>.mp4 -vcodec <span class="keyword">copy</span> -acodec <span class="keyword">copy</span> -vbsf h264_mp4toannexb <span class="number">1</span>.<span class="keyword">ts</span></span><br><span class="line">ffmpeg -i <span class="number">2</span>.mp4 -vcodec <span class="keyword">copy</span> -acodec <span class="keyword">copy</span> -vbsf h264_mp4toannexb <span class="number">2</span>.<span class="keyword">ts</span></span><br><span class="line">ffmpeg -i <span class="string">"concat:1.ts|2.ts"</span> -acodec <span class="keyword">copy</span> -vcodec <span class="keyword">copy</span> -absf aac_adtstoasc output.mp4</span><br></pre></td></tr></table></figure></p>
+        <h1 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h1><p>DaemonSet 的主要作用，是让你在 Kubernetes 集群里，运行一个 Daemon Pod。 </p>
+<h1 id="特征"><a href="#特征" class="headerlink" title="特征"></a>特征</h1><ol>
+<li>这个 Pod 运行在 Kubernetes 集群里的每一个节点(Node)上;</li>
+<li>每个节点上只有一个这样的 Pod 实例;</li>
+<li>当有新的节点加入 Kubernetes 集群后，该 Pod 会自动地在新节点上被创建出来;而当旧 节点被删除后，它上面的 Pod 也相应地会被回收掉。</li>
+</ol>
+<h1 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h1><ol>
+<li>各种网络插件的 Agent 组件，都必须运行在每一个节点上，用来处理这个节点上的容器网 络;</li>
+<li>各种存储插件的 Agent 组件，也必须运行在每一个节点上，用来在这个节点上挂载远程存 储目录，操作容器的 Volume 目录;</li>
+<li>各种监控组件和日志组件，也必须运行在每一个节点上，负责这个节点上的监控信息和日志 搜集。</li>
+</ol>
+<h1 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h1><p>Deployment 部署的副本 Pod 会分布在各个 Node 上，每个 Node 都可能运行好几个副本。DaemonSet 的不同之处在于：每个 Node 上最多只能运行一个副本。</p>
+<p><img src="/images/2020/k8s-scale.png" alt></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2015/10/29/2015/-ffmpeg-mp4-/" data-id="cijbm5x7u0000lipy0ptl4g8n" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/11/2020/k8s-deamonset/" data-id="ckexnkd1u00030crcleyrs916" class="article-share-link">Share</a>
       
       
     </footer>
@@ -110,19 +124,10 @@ var _hmt = _hmt || [];
     
 <nav id="article-nav">
   
-    <a href="/2015/10/29/2015/python-java-aes/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          Python Java AES
-        
-      </div>
-    </a>
   
-  
-    <a href="/2015/10/27/2015/nginx-lua-redis/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2020/09/09/2020/k8s-statefulset/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">nginx-lua-redis</div>
+      <div class="article-nav-title">K8s StatefulSet</div>
     </a>
   
 </nav>

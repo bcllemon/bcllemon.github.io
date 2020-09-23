@@ -3,19 +3,21 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
-  <title>iOS的DeviceToken随生产环境和开发环境变化 | Bowen</title>
+  <title>State Machine | Bowen</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="当我用XCode直接运行到手机上的时候，Device token是以3开头的，而当我打包上传到fir.im，再下载安装的时候，Device token就变成以5开头了 其实这是生产环境和开发环境的问题，在这两个环境下Device token是不同的 如果你手机中的App是通过XCode直接安装的话，那么你的App就属于开发环境，想要推送成功就需要创建开发环境的证书；如果你的App是打包成ipa文件">
+  <meta name="description" content="状态机定义有限状态机，（英语：Finite-state machine, FSM），又称有限状态自动机，简称状态机，是表示有限个状态以及在这些状态之间的转移和动作等行为的数学模型。 有限状态机体现了两点：首先是离散的，然后是有限的。  State：状态这个词有些难以定义，状态存储关于过去的信息，就是说它反映从系统开始到现在时刻的输入变化。 Actions &amp;amp; Transitions：转换指">
 <meta property="og:type" content="article">
-<meta property="og:title" content="iOS的DeviceToken随生产环境和开发环境变化">
-<meta property="og:url" content="http://bcllemon.github.io/2015/10/16/2015/iosdevicetoken/index.html">
+<meta property="og:title" content="State Machine">
+<meta property="og:url" content="http://bcllemon.github.io/2020/09/23/2020/state-machine/index.html">
 <meta property="og:site_name" content="Bowen">
-<meta property="og:description" content="当我用XCode直接运行到手机上的时候，Device token是以3开头的，而当我打包上传到fir.im，再下载安装的时候，Device token就变成以5开头了 其实这是生产环境和开发环境的问题，在这两个环境下Device token是不同的 如果你手机中的App是通过XCode直接安装的话，那么你的App就属于开发环境，想要推送成功就需要创建开发环境的证书；如果你的App是打包成ipa文件">
+<meta property="og:description" content="状态机定义有限状态机，（英语：Finite-state machine, FSM），又称有限状态自动机，简称状态机，是表示有限个状态以及在这些状态之间的转移和动作等行为的数学模型。 有限状态机体现了两点：首先是离散的，然后是有限的。  State：状态这个词有些难以定义，状态存储关于过去的信息，就是说它反映从系统开始到现在时刻的输入变化。 Actions &amp;amp; Transitions：转换指">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="http://bcllemon.github.io/images/2020/state-maching.png">
 <meta property="og:updated_time" content="2020-09-23T07:25:15.557Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="iOS的DeviceToken随生产环境和开发环境变化">
-<meta name="twitter:description" content="当我用XCode直接运行到手机上的时候，Device token是以3开头的，而当我打包上传到fir.im，再下载安装的时候，Device token就变成以5开头了 其实这是生产环境和开发环境的问题，在这两个环境下Device token是不同的 如果你手机中的App是通过XCode直接安装的话，那么你的App就属于开发环境，想要推送成功就需要创建开发环境的证书；如果你的App是打包成ipa文件">
+<meta name="twitter:title" content="State Machine">
+<meta name="twitter:description" content="状态机定义有限状态机，（英语：Finite-state machine, FSM），又称有限状态自动机，简称状态机，是表示有限个状态以及在这些状态之间的转移和动作等行为的数学模型。 有限状态机体现了两点：首先是离散的，然后是有限的。  State：状态这个词有些难以定义，状态存储关于过去的信息，就是说它反映从系统开始到现在时刻的输入变化。 Actions &amp;amp; Transitions：转换指">
+<meta name="twitter:image" content="http://bcllemon.github.io/images/2020/state-maching.png">
   
     <link rel="alternative" href="/atom.xml" title="Bowen" type="application/atom+xml">
   
@@ -70,10 +72,10 @@ var _hmt = _hmt || [];
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-2015/iosdevicetoken" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-2020/state-machine" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2015/10/16/2015/iosdevicetoken/" class="article-date">
-  <time datetime="2015-10-16T17:44:00.000Z" itemprop="datePublished">2015-10-16</time>
+    <a href="/2020/09/23/2020/state-machine/" class="article-date">
+  <time datetime="2020-09-23T15:08:00.000Z" itemprop="datePublished">2020-09-23</time>
 </a>
     
   <div class="article-category">
@@ -88,7 +90,7 @@ var _hmt = _hmt || [];
         
   
     <h1 class="article-title" itemprop="name">
-      iOS的DeviceToken随生产环境和开发环境变化
+      State Machine
     </h1>
   
 
@@ -96,14 +98,28 @@ var _hmt = _hmt || [];
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>当我用XCode直接运行到手机上的时候，Device token是以3开头的，而当我打包上传到fir.im，再下载安装的时候，Device token就变成以5开头了</p>
-<p>其实这是生产环境和开发环境的问题，在这两个环境下Device token是不同的</p>
-<p>如果你手机中的App是通过XCode直接安装的话，那么你的App就属于开发环境，想要推送成功就需要创建开发环境的证书；<br>如果你的App是打包成ipa文件安装的（<font color="red">不管是正式上线还是自己测试</font>），那么就是生产环境，需要创建生产环境证书，这两个环境的Device token是不同的</p>
+        <h1 id="状态机定义"><a href="#状态机定义" class="headerlink" title="状态机定义"></a>状态机定义</h1><p>有限状态机，（英语：Finite-state machine, FSM），又称有限状态自动机，简称状态机，是表示有限个状态以及在这些状态之间的转移和动作等行为的数学模型。</p>
+<p>有限状态机体现了两点：首先是离散的，然后是有限的。</p>
+<ul>
+<li>State：状态这个词有些难以定义，状态存储关于过去的信息，就是说它反映从系统开始到现在时刻的输入变化。</li>
+<li>Actions &amp; Transitions：转换指示状态变更，并且用必须满足来确使转移发生的条件来描述它。动作是在给定时刻要进行的活动的描述。</li>
+<li>Guards:检测器出现的原因是为了检测是否满足从一个状态切换到另外一个状态的条件。</li>
+<li>Event：事件，又见事件，笼统说来，对系统重要的某件事情被称为事件。</li>
+</ul>
+<h1 id="状态机示例"><a href="#状态机示例" class="headerlink" title="状态机示例"></a>状态机示例</h1><p>现实中的例子：验票闸门<br>用于控制地铁和游乐园游乐设施的旋转门是一个门，在腰高处有三个旋转臂，一个横跨入口通道。最初，手臂被锁定，阻挡了入口，阻止了顾客通过。将硬币或代币存放在旋转门上的槽中可解锁手臂，允许单个客户穿过。在顾客通过之后，再次锁定臂直到插入另一枚硬币。</p>
+<p>旋转门被视为状态机，有两种可能的状态：锁定和解锁。有两种可能影响其状态的输入：将硬币放入槽（硬币）并推动手臂（推动）。在锁定状态下，推动手臂无效; 无论输入推送次数多少，它都处于锁定状态。投入硬币 - 即给机器输入硬币 - 将状态从锁定转换为解锁。在解锁状态下，放入额外的硬币无效; 也就是说，给予额外的硬币输入不会改变状态。然而，顾客推动手臂，进行推动输入，将状态转回Locked。</p>
+<p><img src="/images/2020/state-maching.png" alt><br>旋转栅状态机也可以由称为状态图的有向图表示 （上面）。每个状态由节点（圆圈）表示。边（箭头）显示从一个状态到另一个状态的转换。每个箭头都标有触发该转换的输入。不引起状态改变的输入（例如处于未锁定状态的硬币输入）由返回到原始状态的圆形箭头表示。从黑点进入Locked节点的箭头表示它是初始状态。</p>
+<p>#主流框架</p>
+<ul>
+<li>Spring Statemachine</li>
+<li>Stateless4j</li>
+<li>Squirrel-Foundation</li>
+</ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2015/10/16/2015/iosdevicetoken/" data-id="cijbm5x95000nlipymcq8dg2m" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/23/2020/state-machine/" data-id="ckff2c3uc000fzus68qawoev0" class="article-share-link">Share</a>
       
       
     </footer>
@@ -112,19 +128,10 @@ var _hmt = _hmt || [];
     
 <nav id="article-nav">
   
-    <a href="/2015/10/18/2015/mongodbpython/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          Mongodb和Python进行数据统计
-        
-      </div>
-    </a>
   
-  
-    <a href="/2015/10/13/https/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2020/09/11/2020/k8s-deamonset/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Nginx+Tomcat 配置 https</div>
+      <div class="article-nav-title">K8s DeamonSet</div>
     </a>
   
 </nav>

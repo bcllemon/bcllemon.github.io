@@ -104,7 +104,7 @@ var _hmt = _hmt || [];
 </ul>
 <h1 id="状态机示例"><a href="#状态机示例" class="headerlink" title="状态机示例"></a>状态机示例</h1><p>现实中的例子：验票闸门<br>用于控制地铁和游乐园游乐设施的旋转门是一个门，在腰高处有三个旋转臂，一个横跨入口通道。最初，手臂被锁定，阻挡了入口，阻止了顾客通过。将硬币或代币存放在旋转门上的槽中可解锁手臂，允许单个客户穿过。在顾客通过之后，再次锁定臂直到插入另一枚硬币。</p>
 <p>旋转门被视为状态机，有两种可能的状态：锁定和解锁。有两种可能影响其状态的输入：将硬币放入槽（硬币）并推动手臂（推动）。在锁定状态下，推动手臂无效; 无论输入推送次数多少，它都处于锁定状态。投入硬币 - 即给机器输入硬币 - 将状态从锁定转换为解锁。在解锁状态下，放入额外的硬币无效; 也就是说，给予额外的硬币输入不会改变状态。然而，顾客推动手臂，进行推动输入，将状态转回Locked。</p>
-<p><img src="/images/2020/state-maching.png" alt><br>旋转栅状态机也可以由称为状态图的有向图表示 （上面）。每个状态由节点（圆圈）表示。边（箭头）显示从一个状态到另一个状态的转换。每个箭头都标有触发该转换的输入。不引起状态改变的输入（例如处于未锁定状态的硬币输入）由返回到原始状态的圆形箭头表示。从黑点进入Locked节点的箭头表示它是初始状态。</p>
+<p><img src="/images/2020/state-machine.png" alt><br>旋转栅状态机也可以由称为状态图的有向图表示 （上面）。每个状态由节点（圆圈）表示。边（箭头）显示从一个状态到另一个状态的转换。每个箭头都标有触发该转换的输入。不引起状态改变的输入（例如处于未锁定状态的硬币输入）由返回到原始状态的圆形箭头表示。从黑点进入Locked节点的箭头表示它是初始状态。</p>
 <p>#主流框架</p>
 <ul>
 <li>Spring Statemachine</li>
@@ -115,7 +115,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/23/2020/state-machine/" data-id="ckff2c3uc000fzus68qawoev0" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/23/2020/state-machine/" data-id="ckff2gstq000fyqo91nyo24c3" class="article-share-link">Share</a>
       
       
     </footer>
@@ -168,7 +168,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/11/2020/k8s-deamonset/" data-id="ckff2c3u50003zus66s89a6e2" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/11/2020/k8s-deamonset/" data-id="ckff2gstk0003yqo9i8c0ywn4" class="article-share-link">Share</a>
       
       
     </footer>
@@ -218,7 +218,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/09/2020/k8s-statefulset/" data-id="ckff2c3u80009zus62jov9duo" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/09/2020/k8s-statefulset/" data-id="ckff2gstn0009yqo99816b9ca" class="article-share-link">Share</a>
       
       
     </footer>
@@ -271,7 +271,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/04/2020/hmac/" data-id="ckff2c3u30001zus6xctweyi7" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/04/2020/hmac/" data-id="ckff2gsth0001yqo9o0hk9uci" class="article-share-link">Share</a>
       
       
     </footer>
@@ -318,7 +318,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/04/2020/java-aes-key/" data-id="ckff2c3u40002zus68iedkojq" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/04/2020/java-aes-key/" data-id="ckff2gsti0002yqo99h1unmzv" class="article-share-link">Share</a>
       
       
     </footer>
@@ -369,7 +369,7 @@ kubectl rollout history deployment/nginx-deployment</code></p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/04/2020/k8s-scale/" data-id="ckff2c3u70007zus60onhoipi" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/04/2020/k8s-scale/" data-id="ckff2gstm0007yqo9u2wj70k9" class="article-share-link">Share</a>
       
       
     </footer>
@@ -410,7 +410,7 @@ kubectl rollout history deployment/nginx-deployment</code></p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/03/2020/spring-amqp-ack/" data-id="ckff2c3ua000dzus6jhiwjarw" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/03/2020/spring-amqp-ack/" data-id="ckff2gstp000dyqo94q6g5e4i" class="article-share-link">Share</a>
       
       
     </footer>
@@ -451,7 +451,7 @@ kubectl rollout history deployment/nginx-deployment</code></p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/02/2020/k8s-nginx/" data-id="ckff2c3u60005zus6nxcgy96q" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/02/2020/k8s-nginx/" data-id="ckff2gstl0005yqo9hq0toif4" class="article-share-link">Share</a>
       
       
     </footer>
@@ -507,7 +507,7 @@ kubectl rollout history deployment/nginx-deployment</code></p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/02/2020/minikube/" data-id="ckff2c3u9000bzus6rasllvza" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/02/2020/minikube/" data-id="ckff2gsto000byqo9bqpf884i" class="article-share-link">Share</a>
       
       
     </footer>
@@ -556,7 +556,7 @@ kubectl rollout history deployment/nginx-deployment</code></p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/01/2020/hello-world/" data-id="ckff2c3u10000zus6goeacn72" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/01/2020/hello-world/" data-id="ckff2gstg0000yqo9lgjxgmhw" class="article-share-link">Share</a>
       
       
     </footer>

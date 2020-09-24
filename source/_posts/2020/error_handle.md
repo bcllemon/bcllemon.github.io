@@ -53,7 +53,8 @@ CompletableFuture.supplyAsync(Integer::parseInt)
 ```
 CompletableFuture.supplyAsync(Integer::parseInt) 
 				.thenApply(r -> r * 2 * Math.PI)
-				.thenApply(s -> "apply>> " + s) .handle((result, ex) -> {
+				.thenApply(s -> "apply>> " + s) 
+				.handle((result, ex) -> {
 						if (result != null) {
                          return result;
                      } else {                     	
@@ -62,7 +63,7 @@ CompletableFuture.supplyAsync(Integer::parseInt)
 				});
 ```
 
-#最佳实践
+# 最佳实践
 * 统一分类的错误字典。无论你是使用错误码还是异常捕捉，都需要认真并统一地做好错误的分类。最好是在一个地方定义相关的错误。
 * 定义错误的严重程度。
 * 错误日志的输出最好使用错误码，而不是错误信息。打印错误日志的时候，除了要用统一的格式，最好不要用错误信息，而使用相应的错误码，错误码不一定是数字，也可以是一个能从错误字典里找到的一个唯一的可以让人读懂的关键字。这样，会非常有利于日志分析软件进行自动化监控，而不是要从错误信息中做语义分析。

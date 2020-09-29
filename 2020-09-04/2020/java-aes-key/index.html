@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>Java 生成 AES 秘钥 | Bowen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="AES工作模式电子密码本：Electronic Code Book Mode (ECB)ECB模式只是将明文按分组大小切分，然后用同样的密钥正常加密切分好的明文分组。ECB的理想应用场景是短数据（如加密密钥）的加密。此模式的问题是无法隐藏原明文数据的模式，因为同样的明文分组加密得到的密文也是一样的。 密码分组链接：Cipher Block Chaining Mode (CBC)此模式是1976年由">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 生成 AES 秘钥">
+<meta property="og:url" content="http://bcllemon.github.io/2020-09-04/2020/java-aes-key/index.html">
+<meta property="og:site_name" content="Bowen">
+<meta property="og:description" content="AES工作模式电子密码本：Electronic Code Book Mode (ECB)ECB模式只是将明文按分组大小切分，然后用同样的密钥正常加密切分好的明文分组。ECB的理想应用场景是短数据（如加密密钥）的加密。此模式的问题是无法隐藏原明文数据的模式，因为同样的明文分组加密得到的密文也是一样的。 密码分组链接：Cipher Block Chaining Mode (CBC)此模式是1976年由">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-09-29T03:19:58.684Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java 生成 AES 秘钥">
+<meta name="twitter:description" content="AES工作模式电子密码本：Electronic Code Book Mode (ECB)ECB模式只是将明文按分组大小切分，然后用同样的密钥正常加密切分好的明文分组。ECB的理想应用场景是短数据（如加密密钥）的加密。此模式的问题是无法隐藏原明文数据的模式，因为同样的明文分组加密得到的密文也是一样的。 密码分组链接：Cipher Block Chaining Mode (CBC)此模式是1976年由">
+  
+    <link rel="alternative" href="/atom.xml" title="Bowen" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?d5509bd67b01fc636223f654342c7b43";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Bowen</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://bcllemon.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-2020/java-aes-key" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020-09-04/2020/java-aes-key/" class="article-date">
+  <time datetime="2020-09-04T17:34:00.000Z" itemprop="datePublished">2020-09-04</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Java 生成 AES 秘钥
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="AES工作模式"><a href="#AES工作模式" class="headerlink" title="AES工作模式"></a>AES工作模式</h1><h2 id="电子密码本：Electronic-Code-Book-Mode-ECB"><a href="#电子密码本：Electronic-Code-Book-Mode-ECB" class="headerlink" title="电子密码本：Electronic Code Book Mode (ECB)"></a>电子密码本：Electronic Code Book Mode (ECB)</h2><p>ECB模式只是将明文按分组大小切分，然后用同样的密钥正常加密切分好的明文分组。ECB的理想应用场景是短数据（如加密密钥）的加密。此模式的问题是无法隐藏原明文数据的模式，因为同样的明文分组加密得到的密文也是一样的。</p>
+<h2 id="密码分组链接：Cipher-Block-Chaining-Mode-CBC"><a href="#密码分组链接：Cipher-Block-Chaining-Mode-CBC" class="headerlink" title="密码分组链接：Cipher Block Chaining Mode (CBC)"></a>密码分组链接：Cipher Block Chaining Mode (CBC)</h2><p>此模式是1976年由IBM所发明，引入了IV（初始化向量：Initialization Vector）的概念。IV是长度为分组大小的一组随机，通常情况下不用保密，不过在大多数情况下，针对同一密钥不应多次使用同一组IV。<br>CBC要求第一个分组的明文在加密运算前先与IV进行异或；从第二组开始，所有的明文先与前一分组加密后的密文进行异或。[区块链(blockchain)的鼻祖！]<br>CBC模式相比ECB实现了更好的模式隐藏，但因为其将密文引入运算，加解密操作无法并行操作。同时引入的IV向量，还需要加、解密双方共同知晓方可。</p>
+<h2 id="密文反馈：Cipher-Feedback-Mode-CFB"><a href="#密文反馈：Cipher-Feedback-Mode-CFB" class="headerlink" title="密文反馈：Cipher Feedback Mode (CFB)"></a>密文反馈：Cipher Feedback Mode (CFB)</h2><p>与CBC模式类似，但不同的地方在于，CFB模式先生成密码流字典，然后用密码字典与明文进行异或操作并最终生成密文。后一分组的密码字典的生成需要前一分组的密文参与运算。<br>CFB模式是用分组算法实现流算法，明文数据不需要按分组大小对齐。</p>
+<h2 id="输出反馈：Output-Feedback-Mode-OFB"><a href="#输出反馈：Output-Feedback-Mode-OFB" class="headerlink" title="输出反馈：Output Feedback Mode (OFB)"></a>输出反馈：Output Feedback Mode (OFB)</h2><p>OFB模式与CFB模式不同的地方是：生成字典的时候会采用明文参与运算，CFB采用的是密文。<br>CTR模式同样会产生流密码字典，但同是会引入一个计数，以保证任意长时间均不会产生重复输出。</p>
+<h2 id="计数器模式：Counter-Mode-CTR"><a href="#计数器模式：Counter-Mode-CTR" class="headerlink" title="计数器模式：Counter Mode (CTR)"></a>计数器模式：Counter Mode (CTR)</h2><h1 id="生成-AES-秘钥"><a href="#生成-AES-秘钥" class="headerlink" title="生成 AES 秘钥"></a>生成 AES 秘钥</h1><figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">KeyGenerator kgen = KeyGenerator.getInstance(<span class="string">"AES"</span>);</span><br><span class="line">SecureRandom secureRandom = <span class="keyword">new</span> SecureRandom();</span><br><span class="line">kgen.init(<span class="number">256</span>, secureRandom);</span><br><span class="line">SecretKey <span class="built_in">key</span> = kgen.generateKey();</span><br><span class="line">System.out.<span class="built_in">println</span>(Base64.encodeBase64String(<span class="built_in">key</span>.getEncoded()));</span><br></pre></td></tr></table></figure>
+<h1 id="AES-CBC-PKCS5Padding-生成-IV"><a href="#AES-CBC-PKCS5Padding-生成-IV" class="headerlink" title="AES/CBC/PKCS5Padding 生成 IV"></a>AES/CBC/PKCS5Padding 生成 IV</h1><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">SecureRandom secureRandom = <span class="keyword">new</span> SecureRandom();</span><br><span class="line">kgen.init(<span class="number">256</span>, secureRandom);</span><br><span class="line"><span class="keyword">byte</span>[] iv = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">16</span>];</span><br><span class="line">secureRandom.nextBytes(iv);</span><br><span class="line">System.out.<span class="built_in">println</span>(Base64.encodeBase64String(iv));</span><br></pre></td></tr></table></figure>
+<h1 id="AES-CBC-PKCS5Padding-加解密"><a href="#AES-CBC-PKCS5Padding-加解密" class="headerlink" title="AES/CBC/PKCS5Padding 加解密"></a>AES/CBC/PKCS5Padding 加解密</h1><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RijndaelCrypt</span> &#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">String</span> TAG = <span class="string">"RijndaelCrypt"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">String</span> TRANSFORMATION = <span class="string">"AES/CBC/PKCS5Padding"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">String</span> ALGORITHM = <span class="string">"AES"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> SecretKey _password;</span><br><span class="line">    <span class="keyword">private</span> IvParameterSpec _IVParamSpec;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Cipher cipher;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Logger <span class="built_in">log</span> = LoggerFactory.getLogger(RijndaelCrypt.class);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Constructor</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">RijndaelCrypt</span><span class="params">(<span class="keyword">byte</span>[] key, <span class="keyword">byte</span>[] iv)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            _password = <span class="keyword">new</span> SecretKeySpec(key, ALGORITHM);</span><br><span class="line"></span><br><span class="line">            <span class="comment">//Initialize objects</span></span><br><span class="line">            cipher = Cipher.getInstance(TRANSFORMATION);</span><br><span class="line"></span><br><span class="line">            _IVParamSpec = <span class="keyword">new</span> IvParameterSpec(iv);</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">catch</span> (NoSuchAlgorithmException e) &#123;</span><br><span class="line">            <span class="built_in">log</span>.error(TAG, <span class="string">"No such algorithm "</span> + ALGORITHM, e);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (NoSuchPaddingException e) &#123;</span><br><span class="line">            <span class="built_in">log</span>.error(TAG, <span class="string">"No such padding PKCS7"</span>, e);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">String</span> <span class="title">decrypt</span><span class="params">(<span class="keyword">byte</span>[] cipherText)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            cipher.init(Cipher.DECRYPT_MODE, _password, _IVParamSpec);</span><br><span class="line">            <span class="keyword">byte</span>[] decryptedVal = cipher.doFinal(cipherText);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">String</span>(decryptedVal);</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">catch</span> (IllegalBlockSizeException e) &#123;</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">catch</span> (BadPaddingException e) &#123;</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">catch</span> (InvalidAlgorithmParameterException e) &#123;</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">catch</span> (InvalidKeyException e) &#123;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Encryptor.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * @return Base64 encrypted text</span></span><br><span class="line"><span class="comment">     * @text String to be encrypted</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">String</span> <span class="title">encrypt</span><span class="params">(<span class="keyword">byte</span>[] <span class="built_in">text</span>)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            cipher.init(Cipher.ENCRYPT_MODE, _password, _IVParamSpec);</span><br><span class="line">            <span class="keyword">byte</span>[] encryptedData = cipher.doFinal(<span class="built_in">text</span>);</span><br><span class="line">            <span class="keyword">return</span> Base64.encodeBase64String(encryptedData);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            <span class="built_in">log</span>.error(e.getMessage(), e);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> null;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">String</span> <span class="title">encrypt</span><span class="params">(<span class="keyword">String</span> <span class="built_in">text</span>)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] data = StringUtils.getBytesUtf8(<span class="built_in">text</span>);</span><br><span class="line">        <span class="keyword">return</span> encrypt(data);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://bcllemon.github.io/2020-09-04/2020/java-aes-key/" data-id="ckfne7op60005zss1e4t8jp0v" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020-09-04/2020/hmac/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          HMAC 算法
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020-09-04/2020/k8s-scale/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">K8s 水平扩展</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">21</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂记/">杂记</a><span class="category-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">8</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020-09-29/2020/api_trace/">API 调用追踪</a>
+          </li>
+        
+          <li>
+            <a href="/2020-09-24/2020/error_handle/">异常处理</a>
+          </li>
+        
+          <li>
+            <a href="/2020-09-23/2020/state-machine/">State Machine</a>
+          </li>
+        
+          <li>
+            <a href="/2020-09-11/2020/k8s-deamonset/">K8s DeamonSet</a>
+          </li>
+        
+          <li>
+            <a href="/2020-09-09/2020/k8s-statefulset/">K8s StatefulSet</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 Bowen<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

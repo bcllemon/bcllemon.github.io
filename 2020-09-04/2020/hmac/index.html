@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>HMAC 算法 | Bowen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="HMAC Hash-based Message Authentication Code, 哈希消息认证码.HMAC是密钥相关的哈希运算消息认证码，HMAC运算利用哈希算法，以一个密钥和一个消息为输入，生成一个消息摘要作为输出。就是所谓的加盐 !运算作用 验证TPM接受的授权数据和认证数据； 确认TPM接受到的命令请求是已授权的请求，并且，命令在传送的过程中没有被改动过。定义HMAC需要一个加密用散">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HMAC 算法">
+<meta property="og:url" content="http://bcllemon.github.io/2020-09-04/2020/hmac/index.html">
+<meta property="og:site_name" content="Bowen">
+<meta property="og:description" content="HMAC Hash-based Message Authentication Code, 哈希消息认证码.HMAC是密钥相关的哈希运算消息认证码，HMAC运算利用哈希算法，以一个密钥和一个消息为输入，生成一个消息摘要作为输出。就是所谓的加盐 !运算作用 验证TPM接受的授权数据和认证数据； 确认TPM接受到的命令请求是已授权的请求，并且，命令在传送的过程中没有被改动过。定义HMAC需要一个加密用散">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-09-29T03:19:58.684Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HMAC 算法">
+<meta name="twitter:description" content="HMAC Hash-based Message Authentication Code, 哈希消息认证码.HMAC是密钥相关的哈希运算消息认证码，HMAC运算利用哈希算法，以一个密钥和一个消息为输入，生成一个消息摘要作为输出。就是所谓的加盐 !运算作用 验证TPM接受的授权数据和认证数据； 确认TPM接受到的命令请求是已授权的请求，并且，命令在传送的过程中没有被改动过。定义HMAC需要一个加密用散">
+  
+    <link rel="alternative" href="/atom.xml" title="Bowen" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?d5509bd67b01fc636223f654342c7b43";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Bowen</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://bcllemon.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-2020/hmac" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020-09-04/2020/hmac/" class="article-date">
+  <time datetime="2020-09-04T17:42:00.000Z" itemprop="datePublished">2020-09-04</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      HMAC 算法
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="HMAC-Hash-based-Message-Authentication-Code-哈希消息认证码"><a href="#HMAC-Hash-based-Message-Authentication-Code-哈希消息认证码" class="headerlink" title="HMAC Hash-based Message Authentication Code, 哈希消息认证码."></a>HMAC Hash-based Message Authentication Code, 哈希消息认证码.</h1><h2 id="HMAC是密钥相关的哈希运算消息认证码，HMAC运算利用哈希算法，以一个密钥和一个消息为输入，生成一个消息摘要作为输出。就是所谓的加盐"><a href="#HMAC是密钥相关的哈希运算消息认证码，HMAC运算利用哈希算法，以一个密钥和一个消息为输入，生成一个消息摘要作为输出。就是所谓的加盐" class="headerlink" title="HMAC是密钥相关的哈希运算消息认证码，HMAC运算利用哈希算法，以一个密钥和一个消息为输入，生成一个消息摘要作为输出。就是所谓的加盐 !"></a>HMAC是密钥相关的哈希运算消息认证码，HMAC运算利用哈希算法，以一个密钥和一个消息为输入，生成一个消息摘要作为输出。就是所谓的加盐 !</h2><h2 id="运算作用"><a href="#运算作用" class="headerlink" title="运算作用"></a>运算作用</h2><ul>
+<li>验证TPM接受的授权数据和认证数据；</li>
+<li>确认TPM接受到的命令请求是已授权的请求，并且，命令在传送的过程中没有被改动过。<br>定义HMAC需要一个加密用散列函数（表示为H，可以是MD5或者SHA-1）和一个密钥K。我们用B来表示数据块的字节数。（以上所提到的散列函数的分割数据块字长B=64），用L来表示散列函数的输出数据字节数（MD5中L=16,SHA-1中L=20）。鉴别密钥的长度可以是小于等于数据块字长的任何正整数值。应用程序中使用的密钥长度若是比B大，则首先用使用散列函数H作用于它，然后用H输出的L长度字符串作为在HMAC中实际使用的密钥。一般情况下，推荐的最小密钥K长度是L个字节。</li>
+</ul>
+<h2 id="算法表示"><a href="#算法表示" class="headerlink" title="算法表示"></a>算法表示</h2><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">算法公式 ： HMAC（K，M）=H（K⊕opad∣H（K⊕ipad∣M）） [<span class="number">1</span>]</span><br><span class="line">H 代表所采用的HASH算法(如SHA<span class="number">-256</span>)</span><br><span class="line">K 代表认证密码</span><br><span class="line">Ko 代表HASH算法的密文</span><br><span class="line">M 代表一个消息输入</span><br><span class="line">B 代表H中所处理的块大小，这个大小是处理块大小，而不是输出hash的大小</span><br><span class="line">如，SHA<span class="number">-1</span>和SHA<span class="number">-256</span> B = <span class="number">64</span></span><br><span class="line">SHA<span class="number">-384</span>和SHA<span class="number">-512</span> B = <span class="number">128</span></span><br><span class="line">L 表示hash的大小</span><br><span class="line">Opad 用<span class="number">0x5c</span>重复B次</span><br><span class="line">Ipad 用<span class="number">0x36</span>重复B次</span><br><span class="line">Apad 用<span class="number">0x878FE1F3</span>重复(L/<span class="number">4</span>)次</span><br></pre></td></tr></table></figure>
+<h2 id="HMAC的应用"><a href="#HMAC的应用" class="headerlink" title="HMAC的应用"></a>HMAC的应用</h2><p>hmac主要应用在身份验证中，它的使用方法是这样的：</p>
+<ul>
+<li>(1) 客户端发出登录请求（假设是浏览器的GET请求）</li>
+<li>(2) 服务器返回一个随机值，并在会话中记录这个随机值</li>
+<li>(3) 客户端将该随机值作为密钥，用户密码进行hmac运算，然后提交给服务器</li>
+<li>(4) 服务器读取用户数据库中的用户密码和步骤2中发送的随机值做与客户端一样的hmac运算，然后与用户发送的结果比较，如果结果一致则验证用户合法.</li>
+</ul>
+<p>在这个过程中，可能遭到安全攻击的是服务器发送的随机值和用户发送的hmac结果，而对于截获了这两个值的黑客而言这两个值是没有意义的，绝无获取用户密码的可能性，随机值的引入使hmac只在当前会话中有效，大大增强了安全性和实用性。大多数的语言都实现了hmac算法，比如php的mhash、python的hmac.py、java的MessageDigest类，在web验证中使用hmac也是可行的，用js进行md5运算的速度也是比较快的。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://bcllemon.github.io/2020-09-04/2020/hmac/" data-id="ckfne7op50003zss1a7i5jg7q" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020-09-09/2020/k8s-statefulset/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          K8s StatefulSet
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020-09-04/2020/java-aes-key/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Java 生成 AES 秘钥</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">21</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂记/">杂记</a><span class="category-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">8</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020-09-29/2020/api_trace/">API 调用追踪</a>
+          </li>
+        
+          <li>
+            <a href="/2020-09-24/2020/error_handle/">异常处理</a>
+          </li>
+        
+          <li>
+            <a href="/2020-09-23/2020/state-machine/">State Machine</a>
+          </li>
+        
+          <li>
+            <a href="/2020-09-11/2020/k8s-deamonset/">K8s DeamonSet</a>
+          </li>
+        
+          <li>
+            <a href="/2020-09-09/2020/k8s-statefulset/">K8s StatefulSet</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 Bowen<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

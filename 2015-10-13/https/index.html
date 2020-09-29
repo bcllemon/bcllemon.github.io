@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>Nginx+Tomcat 配置 https | Bowen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="SSL/TLS简介安全传输层协议（TLS）与其前辈加密套接字（SSL）都是用于保证 Web 浏览器与 Web 服务器通过安全连接进行通信的技术。利用这些技术，我们所要传送的数据会在一端进行加密，传输到另一端后再进行解密（在处理数据之前）。这是一种双向的操作，服务器和浏览器都能在发送数据前对它们进行加密处理。 SSL/TLS 协议的另一个重要方面是认证。当我们初始通过安全连接与 Web 服务器进行通">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nginx+Tomcat 配置 https">
+<meta property="og:url" content="http://bcllemon.github.io/2015-10-13/https/index.html">
+<meta property="og:site_name" content="Bowen">
+<meta property="og:description" content="SSL/TLS简介安全传输层协议（TLS）与其前辈加密套接字（SSL）都是用于保证 Web 浏览器与 Web 服务器通过安全连接进行通信的技术。利用这些技术，我们所要传送的数据会在一端进行加密，传输到另一端后再进行解密（在处理数据之前）。这是一种双向的操作，服务器和浏览器都能在发送数据前对它们进行加密处理。 SSL/TLS 协议的另一个重要方面是认证。当我们初始通过安全连接与 Web 服务器进行通">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-09-29T03:19:58.684Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nginx+Tomcat 配置 https">
+<meta name="twitter:description" content="SSL/TLS简介安全传输层协议（TLS）与其前辈加密套接字（SSL）都是用于保证 Web 浏览器与 Web 服务器通过安全连接进行通信的技术。利用这些技术，我们所要传送的数据会在一端进行加密，传输到另一端后再进行解密（在处理数据之前）。这是一种双向的操作，服务器和浏览器都能在发送数据前对它们进行加密处理。 SSL/TLS 协议的另一个重要方面是认证。当我们初始通过安全连接与 Web 服务器进行通">
+  
+    <link rel="alternative" href="/atom.xml" title="Bowen" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?d5509bd67b01fc636223f654342c7b43";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Bowen</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://bcllemon.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-https" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015-10-13/https/" class="article-date">
+  <time datetime="2015-10-13T16:13:45.000Z" itemprop="datePublished">2015-10-13</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Nginx+Tomcat 配置 https
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="SSL-TLS简介"><a href="#SSL-TLS简介" class="headerlink" title="SSL/TLS简介"></a>SSL/TLS简介</h1><p>安全传输层协议（TLS）与其前辈加密套接字（SSL）都是用于保证 Web 浏览器与 Web 服务器通过安全连接进行通信的技术。利用这些技术，我们所要传送的数据会在一端进行加密，传输到另一端后再进行解密（在处理数据之前）。这是一种双向的操作，服务器和浏览器都能在发送数据前对它们进行加密处理。</p>
+<p>SSL/TLS 协议的另一个重要方面是认证。当我们初始通过安全连接与 Web 服务器进行通信时，服务器将提供给 Web 浏览器一组“证书”形式的凭证，用来证明站点的归属方以及站点的具体声明。某些情况下，服务器也会请求浏览器出示证书，来证明作为操作者的“你”所宣称的身份是否属实。这种证书叫做“客户端证书”，但事实上它更多地用于 B2B（企业对企业电子商务）的交易中，而并非针对个人用户。大多数启用了 SSL 协议的 Web 服务器都不需要客户端认证。</p>
+<h1 id="证书申请"><a href="#证书申请" class="headerlink" title="证书申请"></a>证书申请</h1><h2 id="使用-OpenSSL-生成-SSL-Key-和-CSR"><a href="#使用-OpenSSL-生成-SSL-Key-和-CSR" class="headerlink" title="使用 OpenSSL 生成 SSL Key 和 CSR"></a>使用 OpenSSL 生成 SSL Key 和 CSR</h2><p>域名，也称为 Common Name，因为特殊的证书不一定是域名：example.com</p>
+<p>组织或公司名字（Organization）：Example, Inc.</p>
+<p>部门（Department）：可以不填写，这里我们写 Web Security</p>
+<p>城市（City）：Beijing</p>
+<p>省份（State / Province）：Beijing</p>
+<p>国家（Country）：CN</p>
+<p>加密强度：2048 位，如果你的机器性能强劲，也可以选择 4096 位</p>
+<p>按照以上信息，使用 OpenSSL 生成 key 和 csr 的命令如下</p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl req -<span class="keyword">new</span> <span class="type"></span>-<span class="keyword">new</span><span class="type">key</span> rsa:<span class="type">2048 -sha256 -nodes -out example_com</span>.csr -keyout example_com.key -subj <span class="string">"/C=CN/ST=Beijing/L=Beijing/O=Example Inc./OU=Web Security/CN=example.com"</span></span><br></pre></td></tr></table></figure>
+<p>PS：如果是泛域名证书，则应该填写*.example.com<br>你可以在系统的任何地方运行这个命令，会自动在当前目录生成 example_com.csr 和 example_com.key 这两个文件<br>这个 CSR 文件就是你需要提交给 SSL 认证机构的，当你的域名或组织通过验证后，认证机构就会颁发给你一个 example_com.crt<br>而 example_com.key 是需要用在 Nginx 配置里和 example_com.crt 配合使用的，需要好好保管，千万别泄露给任何第三方。</p>
+<h1 id="Nginx"><a href="#Nginx" class="headerlink" title="Nginx"></a>Nginx</h1><h2 id="证书处理"><a href="#证书处理" class="headerlink" title="证书处理"></a>证书处理</h2><p>Nginx和Tomcat不一样，它要求的是证书文件 .crt 和私钥 .key 。遗憾的是，我们的私钥在keystore里面，而JDK自带的keytool并不提供私钥的导出功能，所以我们得借助第三方工具来导出私钥。</p>
+<h3 id="1-导出私钥"><a href="#1-导出私钥" class="headerlink" title="1. 导出私钥"></a>1. 导出私钥</h3><p>有一个开源的私钥导出工具叫做 <a href="http://www.oschina.net/p/java-exportpriv" title="java-exportpriv" target="_blank" rel="noopener">java-exportpriv</a> 。它是一个简单的java程序，你下载以后参考它的说明，编译，然后运行即可，非常简单，我就不多罗嗦了。</p>
+<h3 id="2-创建-crt"><a href="#2-创建-crt" class="headerlink" title="2. 创建 crt"></a>2. 创建 crt</h3><p>和Apache不一样，Nginx没有Certificat Chain这个参数，所以你要把你的证书和中间证书合并。合并证书很简单，创建一个先的文件 oschina-chain.crt，内容如下：<br><figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">--<span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">BEGIN</span> <span class="comment">CERTIFICATE</span>--<span class="literal">-</span><span class="literal">-</span><span class="literal">-</span></span><br><span class="line"><span class="comment">这里是你证书的内容</span></span><br><span class="line"><span class="comment"></span>--<span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">END</span> <span class="comment">CERTIFICATE</span>--<span class="literal">-</span><span class="literal">-</span><span class="literal">-</span></span><br><span class="line">--<span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">BEGIN</span> <span class="comment">CERTIFICATE</span>--<span class="literal">-</span><span class="literal">-</span><span class="literal">-</span></span><br><span class="line"><span class="comment">这里是中间证书的内容</span></span><br><span class="line"><span class="comment"></span>--<span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="comment">END</span> <span class="comment">CERTIFICATE</span>--<span class="literal">-</span><span class="literal">-</span><span class="literal">-</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h2><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">      <span class="attribute">listen</span>       <span class="number">443</span> ssl;</span><br><span class="line">      <span class="attribute">server_name</span>  localhost;</span><br><span class="line">      <span class="attribute">ssl</span>                  <span class="literal">on</span>;</span><br><span class="line">      <span class="attribute">ssl_certificate</span>      /oschina/webapp/oschina-chain.crt;</span><br><span class="line">      <span class="attribute">ssl_certificate_key</span>  /oschina/webapp/oschina.key;</span><br><span class="line"></span><br><span class="line">  <span class="attribute">location</span> / &#123;</span><br><span class="line">          <span class="attribute">include</span> proxy.conf;</span><br><span class="line">          <span class="attribute">proxy_pass</span>   https://61.145.122.155:443;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="强制-https"><a href="#强制-https" class="headerlink" title="强制 https"></a>强制 https</h2><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">80</span>;</span><br><span class="line">    <span class="attribute">server_name</span> localhost;</span><br><span class="line">    <span class="attribute">rewrite</span><span class="regexp"> ^/(.*)</span> https://<span class="variable">$server_name</span>/<span class="variable">$1</span> <span class="literal">permanent</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="增强"><a href="#增强" class="headerlink" title="增强"></a>增强</h2><p>但是这么做并不安全，默认是 SHA-1 形式，而现在主流的方案应该都避免 SHA-1，为了确保更强的安全性，我们可以采取迪菲－赫尔曼密钥交换</p>
+<p>首先，进入 /etc/ssl/certs 目录并生成一个 dhparam.pem<br><figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl dhparam -<span class="keyword">out</span> dhparam.pem <span class="number">2048</span> <span class="meta"># 如果你的机器性能足够强大，可以用 4096 位加密</span></span><br></pre></td></tr></table></figure></p>
+<p>生成完毕后，在 Nginx 的 SSL 配置后面加入<br><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">ssl_prefer_server_ciphers</span> <span class="literal">on</span>;</span><br><span class="line"><span class="attribute">ssl_dhparam</span> /etc/ssl/certs/dhparam.pem;</span><br><span class="line"><span class="attribute">ssl_protocols</span> TLSv1 TLSv1.<span class="number">1</span> TLSv1.<span class="number">2</span>;</span><br><span class="line"><span class="attribute">ssl_ciphers</span> <span class="string">"EECDH+ECDSA+AESGCM EECDH+aRSA+AESGCM EECDH+ECDSA+SHA384 EECDH+ECDSA+SHA256 EECDH+aRSA+SHA384 EECDH+aRSA+SHA256 EECDH+aRSA+RC4 EECDH EDH+aRSA !aNULL !eNULL !LOW !3DES !MD5 !EXP !PSK !SRP !DSS !RC4"</span>;</span><br><span class="line"><span class="attribute">keepalive_timeout</span> <span class="number">70</span>;</span><br><span class="line"><span class="attribute">ssl_session_cache</span> shared:SSL:<span class="number">10m</span>;</span><br><span class="line"><span class="attribute">ssl_session_timeout</span> <span class="number">10m</span>;</span><br></pre></td></tr></table></figure></p>
+<p>同时，如果是全站 HTTPS 并且不考虑 HTTP 的话，可以加入 HSTS 告诉你的浏览器本网站全站加密，并且强制用 HTTPS 访问<br><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add_header </span><span class="keyword">Strict-Transport-Security </span>max-age<span class="number">=63072000</span><span class="comment">;</span></span><br><span class="line"><span class="keyword">add_header </span>X-Frame-Options DENY<span class="comment">;</span></span><br><span class="line"><span class="keyword">add_header </span>X-Content-Type-Options nosniff<span class="comment">;</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="Tomcat"><a href="#Tomcat" class="headerlink" title="Tomcat"></a>Tomcat</h1><h2 id="证书"><a href="#证书" class="headerlink" title="证书"></a>证书</h2><p>Tomcat要求的是包含签名过证书的keystore文件和keystore密码。所以我们要先把证书导入keystore<br><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">$JAVA_HOME</span>/<span class="keyword">bin/keytool </span>-<span class="meta">import</span> -<span class="meta">alias</span> oschina -trustcacerts -file oschina.p7s  -keystore oschina.keystore</span><br></pre></td></tr></table></figure></p>
+<p>上面的命令中 alias “oschina” 和之前申请证书的时候输入的 alias 要一致。</p>
+<h2 id="修改Tomcat配置"><a href="#修改Tomcat配置" class="headerlink" title="修改Tomcat配置"></a>修改Tomcat配置</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;Connector <span class="attribute">SSLEnabled</span>=<span class="string">"true"</span> <span class="attribute">acceptCount</span>=<span class="string">"100"</span> <span class="attribute">clientAuth</span>=<span class="string">"false"</span></span><br><span class="line">        <span class="attribute">disableUploadTimeout</span>=<span class="string">"true"</span> <span class="attribute">enableLookups</span>=<span class="string">"false"</span> <span class="attribute">maxThreads</span>=<span class="string">"25"</span></span><br><span class="line">        <span class="attribute">port</span>=<span class="string">"8443"</span> <span class="attribute">keystoreFile</span>=<span class="string">"/oschina/webapp/oschina.keystore"</span> <span class="attribute">keystorePass</span>=<span class="string">"xxxxxxx"</span></span><br><span class="line">        <span class="attribute">protocol</span>=<span class="string">"org.apache.coyote.http11.Http11NioProtocol"</span> <span class="attribute">scheme</span>=<span class="string">"https"</span></span><br><span class="line">        <span class="attribute">secure</span>=<span class="string">"true"</span> <span class="attribute">sslProtocol</span>=<span class="string">"TLS"</span> /&gt;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://bcllemon.github.io/2015-10-13/https/" data-id="cijbm5x8b0003lipyb9e5srvn" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015-10-16/2015/iosdevicetoken/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          iOS的DeviceToken随生产环境和开发环境变化
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">21</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂记/">杂记</a><span class="category-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">8</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020-09-29/2020/api_trace/">API 调用追踪</a>
+          </li>
+        
+          <li>
+            <a href="/2020-09-24/2020/error_handle/">异常处理</a>
+          </li>
+        
+          <li>
+            <a href="/2020-09-23/2020/state-machine/">State Machine</a>
+          </li>
+        
+          <li>
+            <a href="/2020-09-11/2020/k8s-deamonset/">K8s DeamonSet</a>
+          </li>
+        
+          <li>
+            <a href="/2020-09-09/2020/k8s-statefulset/">K8s StatefulSet</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 Bowen<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

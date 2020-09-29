@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>API 调用追踪 | Bowen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="目的开发排查系统问题用得最多的手段就是查看系统日志，但是在分布式环境下使用日志定位问题还是比较麻烦，需要借助”全链路追踪ID”把上下文串联起来. 目前大多数分布式追踪系统的思想模型都来自 Google’s Dapper 论文  ID64位的整数 Trace Tree : 一次跟踪 树节点是Span，包括： Span ID 开始时间和结束时间 RPC时间数据 应用自定义标识数据annotations">
+<meta property="og:type" content="article">
+<meta property="og:title" content="API 调用追踪">
+<meta property="og:url" content="http://bcllemon.github.io/2020-09-29/2020/api_trace/index.html">
+<meta property="og:site_name" content="Bowen">
+<meta property="og:description" content="目的开发排查系统问题用得最多的手段就是查看系统日志，但是在分布式环境下使用日志定位问题还是比较麻烦，需要借助”全链路追踪ID”把上下文串联起来. 目前大多数分布式追踪系统的思想模型都来自 Google’s Dapper 论文  ID64位的整数 Trace Tree : 一次跟踪 树节点是Span，包括： Span ID 开始时间和结束时间 RPC时间数据 应用自定义标识数据annotations">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://bcllemon.github.io/images/2020/api_trace_1.png">
+<meta property="og:updated_time" content="2020-09-29T03:19:58.684Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="API 调用追踪">
+<meta name="twitter:description" content="目的开发排查系统问题用得最多的手段就是查看系统日志，但是在分布式环境下使用日志定位问题还是比较麻烦，需要借助”全链路追踪ID”把上下文串联起来. 目前大多数分布式追踪系统的思想模型都来自 Google’s Dapper 论文  ID64位的整数 Trace Tree : 一次跟踪 树节点是Span，包括： Span ID 开始时间和结束时间 RPC时间数据 应用自定义标识数据annotations">
+<meta name="twitter:image" content="http://bcllemon.github.io/images/2020/api_trace_1.png">
+  
+    <link rel="alternative" href="/atom.xml" title="Bowen" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?d5509bd67b01fc636223f654342c7b43";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Bowen</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://bcllemon.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-2020/api_trace" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020-09-29/2020/api_trace/" class="article-date">
+  <time datetime="2020-09-29T10:45:00.000Z" itemprop="datePublished">2020-09-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      API 调用追踪
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h1><p>开发排查系统问题用得最多的手段就是查看系统日志，但是在分布式环境下使用日志定位问题还是比较麻烦，需要借助”全链路追踪ID”把上下文串联起来.</p>
+<p>目前大多数分布式追踪系统的思想模型都来自 Google’s Dapper 论文<br><img src="/images/2020/api_trace_1.png" alt></p>
+<ul>
+<li>ID<br>64位的整数</li>
+<li>Trace Tree : 一次跟踪</li>
+<li>树节点是Span，包括：<ul>
+<li>Span ID</li>
+<li>开始时间和结束时间</li>
+<li>RPC时间数据</li>
+<li>应用自定义标识数据annotations</li>
+</ul>
+</li>
+<li>树节点之间的边是Span 和它的父节点之间的关系</li>
+<li>没有父节点的Span是根Span (root span)</li>
+<li>所有树节点都有共同的一个Trace ID 标识这次跟踪</li>
+</ul>
+<h1 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h1><h2 id="无入侵增加-traceId"><a href="#无入侵增加-traceId" class="headerlink" title="无入侵增加 traceId"></a>无入侵增加 traceId</h2><p>使用 Logback 的 MDC 机制，在日志模板中加入 traceId 标识，取值方式为 %X{traceId}</p>
+<ol>
+<li>系统入口 创建 traceId 的值</li>
+<li>使用 MDC 保存 traceId</li>
+<li>修改 logback 配置文件模板格式添加标识 %X{traceId}<blockquote>
+<p>MDC（Mapped Diagnostic Context，映射调试上下文）是 log4j 和 logback 提供的一种方便在多线程条件下记录日志的功能。</p>
+</blockquote>
+</li>
+</ol>
+<h2 id="跨进程传递"><a href="#跨进程传递" class="headerlink" title="跨进程传递"></a>跨进程传递</h2><ol>
+<li>「dubbo服务」 使用 org.apache.dubbo.rpc.Filter 创建一个过滤器进行 traceId 传递</li>
+</ol>
+<ul>
+<li>服务消费者：负责传递链路追踪 ID</li>
+<li>服务提供者：负责接收 ID 并保存到 MDC 中</li>
+</ul>
+<ol start="2">
+<li>基于 Spring 的Rest 服务</li>
+</ol>
+<ul>
+<li>服务消费者: 自定义 Http 客户端,统一负责传递链路追踪 ID</li>
+<li>服务提供者: 使用 Filter 进行 traceId 传递</li>
+</ul>
+<h2 id="Spring-Cloud-全家桶解决方案"><a href="#Spring-Cloud-全家桶解决方案" class="headerlink" title="Spring Cloud 全家桶解决方案"></a>Spring Cloud 全家桶解决方案</h2><p>Spring-Cloud-Sleuth是Spring Cloud的组成部分之一，为SpringCloud应用实现了一种分布式追踪解决方案，其兼容了Zipkin, HTrace和log-based追踪</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://bcllemon.github.io/2020-09-29/2020/api_trace/" data-id="ckfne7op30000zss1u6buqipv" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020-09-24/2020/error_handle/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">异常处理</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">21</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂记/">杂记</a><span class="category-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">8</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020-09-29/2020/api_trace/">API 调用追踪</a>
+          </li>
+        
+          <li>
+            <a href="/2020-09-24/2020/error_handle/">异常处理</a>
+          </li>
+        
+          <li>
+            <a href="/2020-09-23/2020/state-machine/">State Machine</a>
+          </li>
+        
+          <li>
+            <a href="/2020-09-11/2020/k8s-deamonset/">K8s DeamonSet</a>
+          </li>
+        
+          <li>
+            <a href="/2020-09-09/2020/k8s-statefulset/">K8s StatefulSet</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 Bowen<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

@@ -68,6 +68,86 @@ var _hmt = _hmt || [];
       <div class="outer">
         <section id="main">
   
+    <article id="post-2020/api_trace" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/09/29/2020/api_trace/" class="article-date">
+  <time datetime="2020-09-29T10:45:00.000Z" itemprop="datePublished">2020-09-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/09/29/2020/api_trace/">API 调用追踪</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h1><p>开发排查系统问题用得最多的手段就是查看系统日志，但是在分布式环境下使用日志定位问题还是比较麻烦，需要借助”全链路追踪ID”把上下文串联起来.</p>
+<p>目前大多数分布式追踪系统的思想模型都来自 Google’s Dapper 论文<br><img src="/images/2020/api_trace_1.png" alt></p>
+<ul>
+<li>ID<br>64位的整数</li>
+<li>Trace Tree : 一次跟踪</li>
+<li>树节点是Span，包括：<ul>
+<li>Span ID</li>
+<li>开始时间和结束时间</li>
+<li>RPC时间数据</li>
+<li>应用自定义标识数据annotations</li>
+</ul>
+</li>
+<li>树节点之间的边是Span 和它的父节点之间的关系</li>
+<li>没有父节点的Span是根Span (root span)</li>
+<li>所有树节点都有共同的一个Trace ID 标识这次跟踪</li>
+</ul>
+<h1 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h1><h2 id="无入侵增加-traceId"><a href="#无入侵增加-traceId" class="headerlink" title="无入侵增加 traceId"></a>无入侵增加 traceId</h2><p>使用 Logback 的 MDC 机制，在日志模板中加入 traceId 标识，取值方式为 %X{traceId}</p>
+<ol>
+<li>系统入口 创建 traceId 的值</li>
+<li>使用 MDC 保存 traceId</li>
+<li>修改 logback 配置文件模板格式添加标识 %X{traceId}<blockquote>
+<p>MDC（Mapped Diagnostic Context，映射调试上下文）是 log4j 和 logback 提供的一种方便在多线程条件下记录日志的功能。</p>
+</blockquote>
+</li>
+</ol>
+<h2 id="跨进程传递"><a href="#跨进程传递" class="headerlink" title="跨进程传递"></a>跨进程传递</h2><ol>
+<li>「dubbo服务」 使用 org.apache.dubbo.rpc.Filter 创建一个过滤器进行 traceId 传递</li>
+</ol>
+<ul>
+<li>服务消费者：负责传递链路追踪 ID</li>
+<li>服务提供者：负责接收 ID 并保存到 MDC 中</li>
+</ul>
+<ol start="2">
+<li>基于 Spring 的Rest 服务</li>
+</ol>
+<ul>
+<li>服务消费者: 自定义 Http 客户端,统一负责传递链路追踪 ID</li>
+<li>服务提供者: 使用 Filter 进行 traceId 传递</li>
+</ul>
+<h2 id="Spring-Cloud-全家桶解决方案"><a href="#Spring-Cloud-全家桶解决方案" class="headerlink" title="Spring Cloud 全家桶解决方案"></a>Spring Cloud 全家桶解决方案</h2><p>Spring-Cloud-Sleuth是Spring Cloud的组成部分之一，为SpringCloud应用实现了一种分布式追踪解决方案，其兼容了Zipkin, HTrace和log-based追踪</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://bcllemon.github.io/2020/09/29/2020/api_trace/" data-id="ckfndk7d60000y3or4omjjyj9" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-2020/error_handle" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/09/24/2020/error_handle/" class="article-date">
@@ -131,7 +211,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/24/2020/error_handle/" data-id="ckfgmf9xy0000zjpi1u3t4sby" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/24/2020/error_handle/" data-id="ckfndk7d80001y3oraqwwfojf" class="article-share-link">Share</a>
       
       
     </footer>
@@ -188,7 +268,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/23/2020/state-machine/" data-id="ckfgmf9ya000hzjpi74qb24gi" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/23/2020/state-machine/" data-id="ckfndk7dn000jy3orcq92dqvc" class="article-share-link">Share</a>
       
       
     </footer>
@@ -241,7 +321,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/11/2020/k8s-deamonset/" data-id="ckfgmf9y30005zjpiufc6x44q" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/11/2020/k8s-deamonset/" data-id="ckfndk7dd0007y3orhurr1aim" class="article-share-link">Share</a>
       
       
     </footer>
@@ -291,7 +371,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/09/2020/k8s-statefulset/" data-id="ckfgmf9y7000bzjpi9nwgzcm1" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/09/2020/k8s-statefulset/" data-id="ckfndk7dj000dy3ori2jveo35" class="article-share-link">Share</a>
       
       
     </footer>
@@ -344,7 +424,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/04/2020/hmac/" data-id="ckfgmf9y10002zjpig4c8zzjr" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/04/2020/hmac/" data-id="ckfndk7da0003y3orm5j4bjuy" class="article-share-link">Share</a>
       
       
     </footer>
@@ -391,7 +471,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/04/2020/java-aes-key/" data-id="ckfgmf9y20003zjpi4vst4q94" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/04/2020/java-aes-key/" data-id="ckfndk7dc0005y3orl8omjc1g" class="article-share-link">Share</a>
       
       
     </footer>
@@ -442,7 +522,7 @@ kubectl rollout history deployment/nginx-deployment</code></p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/04/2020/k8s-scale/" data-id="ckfgmf9y60009zjpite4gqcou" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/04/2020/k8s-scale/" data-id="ckfndk7di000by3orw791und5" class="article-share-link">Share</a>
       
       
     </footer>
@@ -483,7 +563,7 @@ kubectl rollout history deployment/nginx-deployment</code></p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/03/2020/spring-amqp-ack/" data-id="ckfgmf9y9000fzjpiw7ssa7i0" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/03/2020/spring-amqp-ack/" data-id="ckfndk7dm000hy3orn6prhu6y" class="article-share-link">Share</a>
       
       
     </footer>
@@ -539,48 +619,7 @@ kubectl rollout history deployment/nginx-deployment</code></p>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/02/2020/minikube/" data-id="ckfgmf9y8000dzjpizd37etpa" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-2020/k8s-nginx" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/09/02/2020/k8s-nginx/" class="article-date">
-  <time datetime="2020-09-02T00:00:00.000Z" itemprop="datePublished">2020-09-02</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/技术/">技术</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/09/02/2020/k8s-nginx/">K8s 配置 Nginx</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="deployment-文件"><a href="#deployment-文件" class="headerlink" title="deployment 文件"></a>deployment 文件</h1><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span> <span class="comment"># for versions before 1.9.0 use apps/v1beta2</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nginx-deployment</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">  <span class="attr">replicas:</span> <span class="number">1</span> <span class="comment"># tells deployment to run 2 pods matching the template</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">shareProcessNamespace:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">          <span class="attr">image:</span> <span class="string">nginx:1.8</span></span><br><span class="line">          <span class="attr">ports:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">80</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nginx-service</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">  <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">      <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">      <span class="attr">targetPort:</span> <span class="number">80</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">NodePort</span></span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/02/2020/k8s-nginx/" data-id="ckfgmf9y40007zjpiv5wuhuym" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/02/2020/minikube/" data-id="ckfndk7dl000fy3oryafzjq3e" class="article-share-link">Share</a>
       
       
     </footer>
@@ -603,7 +642,7 @@ kubectl rollout history deployment/nginx-deployment</code></p>
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">20</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂记/">杂记</a><span class="category-list-count">2</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">21</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂记/">杂记</a><span class="category-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -616,7 +655,7 @@ kubectl rollout history deployment/nginx-deployment</code></p>
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">8</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">8</span></li></ul>
     </div>
   </div>
 
@@ -626,6 +665,10 @@ kubectl rollout history deployment/nginx-deployment</code></p>
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2020/09/29/2020/api_trace/">API 调用追踪</a>
+          </li>
         
           <li>
             <a href="/2020/09/24/2020/error_handle/">异常处理</a>
@@ -641,10 +684,6 @@ kubectl rollout history deployment/nginx-deployment</code></p>
         
           <li>
             <a href="/2020/09/09/2020/k8s-statefulset/">K8s StatefulSet</a>
-          </li>
-        
-          <li>
-            <a href="/2020/09/04/2020/hmac/">HMAC 算法</a>
           </li>
         
       </ul>

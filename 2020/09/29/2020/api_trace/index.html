@@ -3,19 +3,21 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
-  <title> Hello World | Bowen</title>
+  <title>API 调用追踪 | Bowen</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+  <meta name="description" content="目的开发排查系统问题用得最多的手段就是查看系统日志，但是在分布式环境下使用日志定位问题还是比较麻烦，需要借助”全链路追踪ID”把上下文串联起来. 目前大多数分布式追踪系统的思想模型都来自 Google’s Dapper 论文  ID64位的整数 Trace Tree : 一次跟踪 树节点是Span，包括： Span ID 开始时间和结束时间 RPC时间数据 应用自定义标识数据annotations">
 <meta property="og:type" content="article">
-<meta property="og:title" content=" Hello World">
-<meta property="og:url" content="http://bcllemon.github.io/2020/09/01/2020/hello-world/index.html">
+<meta property="og:title" content="API 调用追踪">
+<meta property="og:url" content="http://bcllemon.github.io/2020/09/29/2020/api_trace/index.html">
 <meta property="og:site_name" content="Bowen">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta property="og:description" content="目的开发排查系统问题用得最多的手段就是查看系统日志，但是在分布式环境下使用日志定位问题还是比较麻烦，需要借助”全链路追踪ID”把上下文串联起来. 目前大多数分布式追踪系统的思想模型都来自 Google’s Dapper 论文  ID64位的整数 Trace Tree : 一次跟踪 树节点是Span，包括： Span ID 开始时间和结束时间 RPC时间数据 应用自定义标识数据annotations">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="http://bcllemon.github.io/images/2020/api_trace_1.png">
 <meta property="og:updated_time" content="2020-09-29T03:01:44.549Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content=" Hello World">
-<meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta name="twitter:title" content="API 调用追踪">
+<meta name="twitter:description" content="目的开发排查系统问题用得最多的手段就是查看系统日志，但是在分布式环境下使用日志定位问题还是比较麻烦，需要借助”全链路追踪ID”把上下文串联起来. 目前大多数分布式追踪系统的思想模型都来自 Google’s Dapper 论文  ID64位的整数 Trace Tree : 一次跟踪 树节点是Span，包括： Span ID 开始时间和结束时间 RPC时间数据 应用自定义标识数据annotations">
+<meta name="twitter:image" content="http://bcllemon.github.io/images/2020/api_trace_1.png">
   
     <link rel="alternative" href="/atom.xml" title="Bowen" type="application/atom+xml">
   
@@ -70,14 +72,14 @@ var _hmt = _hmt || [];
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-2020/hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-2020/api_trace" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/09/01/2020/hello-world/" class="article-date">
-  <time datetime="2020-09-01T00:00:00.000Z" itemprop="datePublished">2020-09-01</time>
+    <a href="/2020/09/29/2020/api_trace/" class="article-date">
+  <time datetime="2020-09-29T10:45:00.000Z" itemprop="datePublished">2020-09-29</time>
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/杂记/">杂记</a>
+    <a class="article-category-link" href="/categories/技术/">技术</a>
   </div>
 
   </div>
@@ -88,7 +90,7 @@ var _hmt = _hmt || [];
         
   
     <h1 class="article-title" itemprop="name">
-       Hello World
+      API 调用追踪
     </h1>
   
 
@@ -96,20 +98,51 @@ var _hmt = _hmt || [];
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Welcome to <a href="http://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+        <h1 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h1><p>开发排查系统问题用得最多的手段就是查看系统日志，但是在分布式环境下使用日志定位问题还是比较麻烦，需要借助”全链路追踪ID”把上下文串联起来.</p>
+<p>目前大多数分布式追踪系统的思想模型都来自 Google’s Dapper 论文<br><img src="/images/2020/api_trace_1.png" alt></p>
+<ul>
+<li>ID<br>64位的整数</li>
+<li>Trace Tree : 一次跟踪</li>
+<li>树节点是Span，包括：<ul>
+<li>Span ID</li>
+<li>开始时间和结束时间</li>
+<li>RPC时间数据</li>
+<li>应用自定义标识数据annotations</li>
+</ul>
+</li>
+<li>树节点之间的边是Span 和它的父节点之间的关系</li>
+<li>没有父节点的Span是根Span (root span)</li>
+<li>所有树节点都有共同的一个Trace ID 标识这次跟踪</li>
+</ul>
+<h1 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h1><h2 id="无入侵增加-traceId"><a href="#无入侵增加-traceId" class="headerlink" title="无入侵增加 traceId"></a>无入侵增加 traceId</h2><p>使用 Logback 的 MDC 机制，在日志模板中加入 traceId 标识，取值方式为 %X{traceId}</p>
+<ol>
+<li>系统入口 创建 traceId 的值</li>
+<li>使用 MDC 保存 traceId</li>
+<li>修改 logback 配置文件模板格式添加标识 %X{traceId}<blockquote>
+<p>MDC（Mapped Diagnostic Context，映射调试上下文）是 log4j 和 logback 提供的一种方便在多线程条件下记录日志的功能。</p>
+</blockquote>
+</li>
+</ol>
+<h2 id="跨进程传递"><a href="#跨进程传递" class="headerlink" title="跨进程传递"></a>跨进程传递</h2><ol>
+<li>「dubbo服务」 使用 org.apache.dubbo.rpc.Filter 创建一个过滤器进行 traceId 传递</li>
+</ol>
+<ul>
+<li>服务消费者：负责传递链路追踪 ID</li>
+<li>服务提供者：负责接收 ID 并保存到 MDC 中</li>
+</ul>
+<ol start="2">
+<li>基于 Spring 的Rest 服务</li>
+</ol>
+<ul>
+<li>服务消费者: 自定义 Http 客户端,统一负责传递链路追踪 ID</li>
+<li>服务提供者: 使用 Filter 进行 traceId 传递</li>
+</ul>
+<h2 id="Spring-Cloud-全家桶解决方案"><a href="#Spring-Cloud-全家桶解决方案" class="headerlink" title="Spring Cloud 全家桶解决方案"></a>Spring Cloud 全家桶解决方案</h2><p>Spring-Cloud-Sleuth是Spring Cloud的组成部分之一，为SpringCloud应用实现了一种分布式追踪解决方案，其兼容了Zipkin, HTrace和log-based追踪</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020/09/01/2020/hello-world/" data-id="ckfndk7d90002y3orf6n5mkta" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020/09/29/2020/api_trace/" data-id="ckfndk7d60000y3or4omjjyj9" class="article-share-link">Share</a>
       
       
     </footer>
@@ -118,19 +151,10 @@ var _hmt = _hmt || [];
     
 <nav id="article-nav">
   
-    <a href="/2020/09/02/2020/k8s-nginx/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          K8s 配置 Nginx
-        
-      </div>
-    </a>
   
-  
-    <a href="/2016/01/12/2016/flask-bugs/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2020/09/24/2020/error_handle/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Flask入坑指南</div>
+      <div class="article-nav-title">异常处理</div>
     </a>
   
 </nav>

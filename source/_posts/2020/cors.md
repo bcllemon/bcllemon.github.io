@@ -58,5 +58,5 @@ Content-Type：只限于三个值application/x-www-form-urlencoded、multipart/f
 该字段是一个逗号分隔的字符串，指定浏览器CORS请求会额外发送的头信息字段
 
 简单请求, 返回: 1/2/3
-非简单请求, 上送: 7/8, 返回: 2/4/5/6
+非简单请求, 上送: 7/8, 返回: 1/2/4/5/6
 

@@ -68,6 +68,62 @@ var _hmt = _hmt || [];
       <div class="outer">
         <section id="main">
   
+    <article id="post-2020/minikube" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020-09-02/2020/minikube/" class="article-date">
+  <time datetime="2020-09-02T00:00:00.000Z" itemprop="datePublished">2020-09-02</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020-09-02/2020/minikube/">Macbook Minikube 配置</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="配置步骤"><a href="#配置步骤" class="headerlink" title="配置步骤"></a>配置步骤</h1><h2 id="安装-kubectl"><a href="#安装-kubectl" class="headerlink" title="安装 kubectl"></a>安装 kubectl</h2><p><code>brew install kubernetes-cli</code></p>
+<h2 id="安装-Hypervisor"><a href="#安装-Hypervisor" class="headerlink" title="安装 Hypervisor"></a>安装 Hypervisor</h2><p><code>brew install hyperkit</code></p>
+<h2 id="安装-Minikube"><a href="#安装-Minikube" class="headerlink" title="安装 Minikube"></a>安装 Minikube</h2><p><code>brew install minikube</code></p>
+<h2 id="启动-Minikube"><a href="#启动-Minikube" class="headerlink" title="启动 Minikube"></a>启动 Minikube</h2><p><code>minikube start --vm-driver=hyperkit --image-repository=registry.cn-hangzhou.aliyuncs.com/google_containers</code></p>
+<h2 id="检查集群的状态"><a href="#检查集群的状态" class="headerlink" title="检查集群的状态"></a>检查集群的状态</h2><p><code>minikube status</code><br><figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">minikube</span><br><span class="line"><span class="symbol">type:</span> Control Plane</span><br><span class="line"><span class="symbol">host:</span> Running</span><br><span class="line"><span class="symbol">kubelet:</span> Running</span><br><span class="line"><span class="symbol">apiserver:</span> Running</span><br><span class="line"><span class="symbol">kubeconfig:</span> Configured</span><br></pre></td></tr></table></figure></p>
+<h2 id="查看-Minikube-ip"><a href="#查看-Minikube-ip" class="headerlink" title="查看 Minikube ip"></a>查看 Minikube ip</h2><p><code>minikube ip</code></p>
+<h2 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h2><p><code>export no_proxy=&quot;127.0.0.1,{minikube ip}&quot;</code></p>
+<h2 id="测试部署"><a href="#测试部署" class="headerlink" title="测试部署"></a>测试部署</h2><p><code>kubectl create deployment hello-minikube --image=registry.cn-hangzhou.aliyuncs.com/google_containers/echoserver:1.10</code></p>
+<h1 id="将部署暴露为服务"><a href="#将部署暴露为服务" class="headerlink" title="将部署暴露为服务"></a>将部署暴露为服务</h1><p><code>kubectl expose deployment hello-minikube --type=NodePort --port=8080</code></p>
+<h1 id="查看服务"><a href="#查看服务" class="headerlink" title="查看服务"></a>查看服务</h1><p><code>kubectl get pod</code></p>
+<h1 id="获取服务URL"><a href="#获取服务URL" class="headerlink" title="获取服务URL"></a>获取服务URL</h1><p><code>minikube service hello-minikube --url</code></p>
+<h1 id="查看仪表盘"><a href="#查看仪表盘" class="headerlink" title="查看仪表盘"></a>查看仪表盘</h1><p><code>minikube dashboard</code></p>
+<h1 id="删除服务"><a href="#删除服务" class="headerlink" title="删除服务"></a>删除服务</h1><p><code>kubectl delete services hello-minikube</code></p>
+<h1 id="删除部署"><a href="#删除部署" class="headerlink" title="删除部署"></a>删除部署</h1><p><code>kubectl delete deployment hello-minikube</code></p>
+<h1 id="停止Minikube集群"><a href="#停止Minikube集群" class="headerlink" title="停止Minikube集群"></a>停止Minikube集群</h1><p><code>minikube stop</code></p>
+<h1 id="删除Minikube集群"><a href="#删除Minikube集群" class="headerlink" title="删除Minikube集群"></a>删除Minikube集群</h1><p><code>minikube delete</code></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://bcllemon.github.io/2020-09-02/2020/minikube/" data-id="ckg7o5chl000hzkpmjzdca1zt" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-2020/k8s-nginx" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020-09-02/2020/k8s-nginx/" class="article-date">
@@ -99,7 +155,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020-09-02/2020/k8s-nginx/" data-id="ckfne7op80009zss1zrjvb8k6" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020-09-02/2020/k8s-nginx/" data-id="ckg7o5chi000bzkpmjfpjct7m" class="article-share-link">Share</a>
       
       
     </footer>
@@ -148,7 +204,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020-09-01/2020/hello-world/" data-id="ckfne7op40002zss18hpn3dur" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020-09-01/2020/hello-world/" data-id="ckg7o5che0003zkpm7vpeaxcl" class="article-share-link">Share</a>
       
       
     </footer>
@@ -526,53 +582,6 @@ var _hmt = _hmt || [];
 
 
   
-    <article id="post-2015/zaji" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015-10-22/2015/zaji/" class="article-date">
-  <time datetime="2015-10-22T10:16:00.000Z" itemprop="datePublished">2015-10-22</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/杂记/">杂记</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015-10-22/2015/zaji/">杂记</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <ul>
-<li>京城米贵，居之不易，多少强颜欢笑的背后，都是紧咬的牙关。–普通朋友</li>
-<li>人啊，整天算计来算计去，累不累啊。</li>
-<li>你最亲近的人都不能理解你支持你</li>
-<li>长眠是不是解决问题的办法</li>
-<li>对别人好一定要计较回报吗？</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2015-10-22/2015/zaji/" data-id="cijbm5x8g0008lipyyfgb8rhd" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
@@ -586,7 +595,7 @@ var _hmt = _hmt || [];
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">21</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂记/">杂记</a><span class="category-list-count">2</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">22</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂记/">杂记</a><span class="category-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -599,7 +608,7 @@ var _hmt = _hmt || [];
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">8</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">8</span></li></ul>
     </div>
   </div>
 
@@ -609,6 +618,10 @@ var _hmt = _hmt || [];
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2020-10-13/2020/cors/">跨域资源共享 CORS</a>
+          </li>
         
           <li>
             <a href="/2020-09-29/2020/api_trace/">API 调用追踪</a>
@@ -624,10 +637,6 @@ var _hmt = _hmt || [];
         
           <li>
             <a href="/2020-09-11/2020/k8s-deamonset/">K8s DeamonSet</a>
-          </li>
-        
-          <li>
-            <a href="/2020-09-09/2020/k8s-statefulset/">K8s StatefulSet</a>
           </li>
         
       </ul>

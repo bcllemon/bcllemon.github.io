@@ -13,7 +13,7 @@
 <meta property="og:description" content="目的开发排查系统问题用得最多的手段就是查看系统日志，但是在分布式环境下使用日志定位问题还是比较麻烦，需要借助”全链路追踪ID”把上下文串联起来. 目前大多数分布式追踪系统的思想模型都来自 Google’s Dapper 论文  ID64位的整数 Trace Tree : 一次跟踪 树节点是Span，包括： Span ID 开始时间和结束时间 RPC时间数据 应用自定义标识数据annotations">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://bcllemon.github.io/images/2020/api_trace_1.png">
-<meta property="og:updated_time" content="2020-09-29T03:19:58.684Z">
+<meta property="og:updated_time" content="2020-10-13T07:53:30.592Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="API 调用追踪">
 <meta name="twitter:description" content="目的开发排查系统问题用得最多的手段就是查看系统日志，但是在分布式环境下使用日志定位问题还是比较麻烦，需要借助”全链路追踪ID”把上下文串联起来. 目前大多数分布式追踪系统的思想模型都来自 Google’s Dapper 论文  ID64位的整数 Trace Tree : 一次跟踪 树节点是Span，包括： Span ID 开始时间和结束时间 RPC时间数据 应用自定义标识数据annotations">
@@ -142,7 +142,7 @@ var _hmt = _hmt || [];
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://bcllemon.github.io/2020-09-29/2020/api_trace/" data-id="ckfne7op30000zss1u6buqipv" class="article-share-link">Share</a>
+      <a data-url="http://bcllemon.github.io/2020-09-29/2020/api_trace/" data-id="ckg7o5cha0000zkpmymmabfnx" class="article-share-link">Share</a>
       
       
     </footer>
@@ -150,6 +150,15 @@ var _hmt = _hmt || [];
   
     
 <nav id="article-nav">
+  
+    <a href="/2020-10-13/2020/cors/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          跨域资源共享 CORS
+        
+      </div>
+    </a>
   
   
     <a href="/2020-09-24/2020/error_handle/" id="article-nav-older" class="article-nav-link-wrap">
@@ -170,7 +179,7 @@ var _hmt = _hmt || [];
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">21</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂记/">杂记</a><span class="category-list-count">2</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">22</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂记/">杂记</a><span class="category-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -183,7 +192,7 @@ var _hmt = _hmt || [];
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">8</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">8</span></li></ul>
     </div>
   </div>
 
@@ -193,6 +202,10 @@ var _hmt = _hmt || [];
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2020-10-13/2020/cors/">跨域资源共享 CORS</a>
+          </li>
         
           <li>
             <a href="/2020-09-29/2020/api_trace/">API 调用追踪</a>
@@ -208,10 +221,6 @@ var _hmt = _hmt || [];
         
           <li>
             <a href="/2020-09-11/2020/k8s-deamonset/">K8s DeamonSet</a>
-          </li>
-        
-          <li>
-            <a href="/2020-09-09/2020/k8s-statefulset/">K8s StatefulSet</a>
           </li>
         
       </ul>
